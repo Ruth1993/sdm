@@ -11,5 +11,6 @@ public class Hospital {
 		this.id = id;
 		this.name = name;
 		this.doctors = doctors;
+		
 	}
 }
