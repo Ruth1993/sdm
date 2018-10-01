@@ -10,4 +10,8 @@ public class Patient extends Role {
 	public HealthRecord getHealthRecord() {
 		return this.hr;
 	}
+	
+	public void setEntry(Date date, String descript) {
+		this.hr.setEntry(date, descript);
+	}
 }
