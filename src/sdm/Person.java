@@ -14,4 +14,12 @@ public class Person {
 		this.name = name;
 		this.roles = roles;
 	}
+	
+	public void addRole(Role role) {
+		this.roles.add(role);
+	}
+	
+	public void removeRole(Role role) {
+		this.roles.remove(role);
+	}
 }

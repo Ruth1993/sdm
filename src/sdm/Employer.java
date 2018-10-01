@@ -1,5 +1,5 @@
 package sdm;
 
-public class Employer extends Role{
+public class Employer extends Role {
 
 }
