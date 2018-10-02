@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Serveur: localhost
--- Généré le : Mar 02 Octobre 2018 à 16:18
+-- Généré le : Mar 02 Octobre 2018 à 16:29
 -- Version du serveur: 5.5.8
 -- Version de PHP: 5.2.17
 
@@ -191,13 +191,11 @@ CREATE TABLE IF NOT EXISTS `persons_basic_info` (
 --
 
 CREATE TABLE IF NOT EXISTS `persons_medicines` (
-  `id_patients` varchar(255) NOT NULL,
   `medicine_name` varchar(255) NOT NULL,
   `dosage` varchar(255) NOT NULL,
   `date_start` varchar(255) NOT NULL,
   `date_end` varchar(255) NOT NULL,
   `id_visit` varchar(255) NOT NULL,
-  KEY `id_patients` (`id_patients`),
   KEY `id_visit` (`id_visit`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
@@ -272,8 +270,7 @@ ALTER TABLE `persons_basic_info`
 -- Contraintes pour la table `persons_medicines`
 --
 ALTER TABLE `persons_medicines`
-  ADD CONSTRAINT `persons_medicines_ibfk_2` FOREIGN KEY (`id_visit`) REFERENCES `persons_visits` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `persons_medicines_ibfk_1` FOREIGN KEY (`id_patients`) REFERENCES `persons_basic_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `persons_medicines_ibfk_2` FOREIGN KEY (`id_visit`) REFERENCES `persons_visits` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `persons_visits`
