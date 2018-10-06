@@ -5,11 +5,21 @@ import java.util.List;
 public class Insurance {
 	private int id;
 	private String name;
-	private List<Person> clients;
 	
-	public Insurance(int id, String name, List<Person> clients) {
+	public Insurance(int id, String name) {
 		this.id = id;
 		this.name = name;
-		this.clients = clients;
+	}
+	
+	public List<Person> getClients() {
+		//to be implemented
+		//sql query
+		return null;
+	}
+	
+	public Person getClients(int id) {
+		//to be implemented
+		//sql query
+		return null;
 	}
 }
