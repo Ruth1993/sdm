@@ -16,13 +16,8 @@ public class Person {
 	*/
 	private List<Role> roles;
 	
-	public Person(int id, String name, Date birth_date, String gender, String blood_type, List<Role> roles) {
+	public Person(int id) {
 		this.id = id;
-		this.name = name;
-		this.birth_date = birth_date;
-		this.gender = gender;
-		this.blood_type = blood_type;
-		this.roles = roles;
 	}
 	
 	/**
