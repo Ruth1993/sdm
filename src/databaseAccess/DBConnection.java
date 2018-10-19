@@ -1,40 +1,88 @@
-package sdm;
+package databaseAccess;
 
 import java.sql.*;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class DBConnection {
-	private String db_driver = "com.mysql.jdbc.Driver";
-	private String db_url = "jdbc:mysql://localhost:3306";
-	private String db_username = "root";
-	private String db_password = "";
-	private String db_dbname = "telnetscans";
-	
+	static String driver = "com.mysql.jdbc.Driver";
+	static String password = "root";
+	static String user = "root";
+	private static Connection connection = null;
 
-	public ResultSet selectQuery(int limit) throws SQLException {
-		ResultSet res = null;
-		
-		Connection conn = null;
+	private static DBConnection instanta = null;
+
+	public DBConnection() {
 		try {
-			// Connecting to DB
-			conn = DriverManager.getConnection(this.db_url + "/" + this.db_dbname, this.db_username, this.db_password);
-			
-			// Query
-			String selectQuery = "SELECT ip FROM scans limit ? ";
-			PreparedStatement selectStmt = conn.prepareStatement(selectQuery);
-			selectStmt.setInt(1, limit);
-			res = selectStmt.executeQuery();
-			
-//			while (res.next()) {
-//				System.out.println(res.getRow());
-//			}
-		} catch (Exception e) {
-			// TODO: handle exception
+			Class.forName(driver);
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
-			if (conn != null) {
-				conn.close();
-			}
 		}
-		
-		return res;
+		buildConnection();
+	}
+
+	public static Connection getConnection() {
+		if (instanta == null) {
+			instanta = new DBConnection();
+		}
+		return connection;
+	}
+
+	public static void dispaySQLExceptions(SQLException ex) {
+		while (ex != null) {
+			System.out.println("SQL State:" + ex.getSQLState());
+			System.out.println("Error Code:" + ex.getErrorCode());
+			System.out.println("Message:" + ex.getMessage());
+			Throwable t = ex.getCause();
+			while (t != null) {
+				System.out.println("Cause:" + t);
+				t = t.getCause();
+			}
+			ex = ex.getNextException();
+		}
+	}
+
+	public static void buildConnection() {
+		String url = "jdbc:mysql://localhost/sdmproject";
+		try {
+			connection = DriverManager.getConnection(url, user, password);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (!connection.isClosed())
+					System.out.println("JDBC Successfully connected.");
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	public static ResultSet query(String query) {
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
+			stmt.close();
+			return rs;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	public static void update(String update) {
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+			stmt.executeUpdate(update);
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

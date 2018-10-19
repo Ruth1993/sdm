@@ -1,17 +1,18 @@
 package main;
 
-<<<<<<< HEAD
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
-import sdm.DBConnection;
-=======
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import databaseAccess.DBConnection;
 import sdm.*;
->>>>>>> ruth
+
 
 public class Main {
 
@@ -19,20 +20,24 @@ public class Main {
 		// TODO Auto-generated method stub
 		System.out.println("SDM Project");
 		
-<<<<<<< HEAD
+
 		// Test DB connection
-		DBConnection db = new DBConnection();
+		Connection connection = DBConnection.getConnection();
 		try {
-			ResultSet res = db.selectQuery(5);
+			Statement Statement = connection.createStatement();
+			ResultSet res = Statement.executeQuery("SELECT * FROM sdmproject.health_clubs");
+
 			while (res.next()) {
-				System.out.println(res.getString(1));
+				System.out.println(res.getString("id"));
 			}
+			res.close();
+			Statement.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			System.out.println("Error connecting to DB");
+			e.printStackTrace();
 		}
 		
-=======
+
 		/**
 		 * All of the below is for testing purposes
 		 */
@@ -50,7 +55,7 @@ public class Main {
 		System.out.println(p1.patient().test());
 		System.out.println(p1.doctor().test());
 		System.out.println(p1.employer().test());
->>>>>>> ruth
+
 	}
 
 }
