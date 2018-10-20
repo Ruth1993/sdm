@@ -18,7 +18,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
-		System.out.println("SDM Project");
+		System.out.println("SDM Project.");
 		
 
 		// Test DB connection
