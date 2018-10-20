@@ -45,7 +45,7 @@ public class DBConnection {
 		}
 	}
 
-	public static void buildConnection() {
+	private static void buildConnection() {
 		String url = "jdbc:mysql://localhost/sdmproject";
 		try {
 			connection = DriverManager.getConnection(url, user, password);
@@ -63,7 +63,7 @@ public class DBConnection {
 	}
 
 	public static ResultSet query(String query) {
-		Statement stmt;
+		Statement stmt = null;
 		try {
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
@@ -72,6 +72,13 @@ public class DBConnection {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
+		
+		if (stmt != null) {
+	        try {
+	        	stmt.close();
+	        } catch (SQLException e) { /* ignored */}
+	    }
+		
 		return null;
 	}
 
@@ -80,6 +87,7 @@ public class DBConnection {
 		try {
 			stmt = connection.createStatement();
 			stmt.executeUpdate(update);
+			
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
