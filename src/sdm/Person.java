@@ -3,6 +3,8 @@ package sdm;
 import java.util.Date;
 import java.util.List;
 
+import databaseAccess.DBConnection;
+
 public class Person {
 	/** Basic info */
 	private int id;
@@ -50,8 +52,9 @@ public class Person {
 	 * @param emergency_contact
 	 */
 	public void changeEmergencyContactDB(String emergency_contact) {
-		//to be implemented
-		//sql query
+		
+		DBConnection.update("UPDATE sdmproject.patients_basic_health_info set emergency_contact"+emergency_contact+" WHERE id="+this.id+" limit 1");
+		
 	}
 	
 	/**
@@ -59,8 +62,9 @@ public class Person {
 	 * @param id_family_doctor
 	 */
 	public void changeIdFamilyDoctorDB(int id_family_doctor) {
-		//to be implemented
-		//sql query
+		
+		DBConnection.update("UPDATE sdmproject.patients_basic_health_info set id_family_doctor"+id_family_doctor+" WHERE id="+this.id+" limit 1");
+		
 	}
 	
 	public Patient patient() {
