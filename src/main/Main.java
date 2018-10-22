@@ -66,8 +66,7 @@ public class Main {
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
-		
+		}		
 
 //		/**
 //		 * All of the below is for testing purposes
