@@ -82,6 +82,15 @@ public class Main {
 //		Person p2 = new Person(2, "Metin", birth_date, "Male", "B", null);
 //		Person p3 = new Person(3, "Ivan", birth_date, "Male", "AB", null);
 //		Person p4 = new Person(4, "Ruth", birth_date, "Female", "O", null);
+		
+		/*
+		 * 
+		 * p3 = new Doctor()
+		 * 
+		 * Doctor change to person
+		 * p3.transfertoperson
+		 */
+		
 //	
 //		System.out.println(p1.patient().test());
 //		System.out.println(p1.doctor().test());
