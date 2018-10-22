@@ -63,9 +63,7 @@ public class Person {
 	 */
 	public void changeIdFamilyDoctorDB(int id_family_doctor) {
 		
-		DBConnection.update("UPDATE sdmproject.patients_basic_health_info set id_family_doctor= '"+
-		id_family_doctor+
-		"' WHERE id_patient= "+this.id+" limit 1");
+		DBConnection.update("UPDATE sdmproject.patients_basic_health_info set id_family_doctor= '"+id_family_doctor+"' WHERE id_patient= "+this.id+" limit 1");
 		
 	}
 	
