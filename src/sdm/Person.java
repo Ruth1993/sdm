@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Date;
 
 import javax.crypto.Cipher;
 
@@ -35,6 +36,7 @@ public class Person {
 	public Person(int id, String[] attrs) {
 		this.id = id;
 		this.attrs = attrs;
+		
 	}
 	
 	public String[] getAttrs(){
@@ -48,11 +50,75 @@ public class Person {
 	public PublicKey getPK() {
 		return PK;
 	}
-	
+
+	public void setPK(String PKJSONString) {
+		JSONObject json = JSON.parseObject(PKJSONString);
+		byte[] b = json.getBytes("PK");
+		this.PK = SerializeUtils.constructFromByteArray(PublicKey.class, b);
+	}
+
+	public SecretKey getSK() {
+		return SK;
+	}
+
 	public void setSK(String SKJSONString) {
 		JSONObject json = JSON.parseObject(SKJSONString);
 		byte[] b = json.getBytes("SK");
 		this.SK = SerializeUtils.constructFromByteArray(SecretKey.class, b);
+	}
+	
+	public void changeHealthRecordDB(String emergency_contact, int id_family_doctor) {
+		//to be implemented
+		//sql query
+	}
+	
+	/**
+	 * Insert or change the name of the emergency contact in the PHR system
+	 * @param emergency_contact
+	 */
+	public void changeEmergencyContactDB(String emergency_contact) {
+		
+		DBConnection.update("UPDATE sdmproject.patients_basic_health_info set emergency_contact= '"+emergency_contact+"' WHERE id_patient= "+this.id+" limit 1");
+		
+	}
+	
+	/**
+	 * Insert or change the id of the family doctor in the PHR system
+	 * @param id_family_doctor
+	 */
+	public void changeIdFamilyDoctorDB(int id_family_doctor) {
+		
+		DBConnection.update("UPDATE sdmproject.patients_basic_health_info set id_family_doctor= '"+
+		id_family_doctor+
+		"' WHERE id_patient= "+this.id+" limit 1");
+		
+	}
+	
+	/**
+	 * Insert entry in insertVisitationDB table
+	 * @param id_patient
+	 * @param date_start
+	 * @param date_end
+	 * @param reason
+	 * @param results
+	 * @param id_hospitals_doctors
+	 */
+	public void insertVisitationDB(int id_patient, Date date_start, Date date_end, String reason, String results, int id_hospitals_doctors) {
+		//to be implemented
+		//sql query
+	}
+	
+	/**
+	 * Insert entry in Persons_medicine table
+	 * @param medicine_name
+	 * @param dosage
+	 * @param date_start
+	 * @param date_end
+	 * @param id_visit
+	 */
+	public void insertMedicineDB(String medicine_name, String dosage, Date date_start, Date date_end, int id_visit) {
+		//to be implemented
+		//sql query
 	}
 
 	//file in should be changed to the plaintext parameters for the input query
@@ -64,7 +130,6 @@ public class Person {
 	}
 	
 	//Change decryption function with mediator
-	/**
 	public void dec(File in){
 		String ciphertextFileName = null; 
 		DataInputStream dis = null;
@@ -103,6 +168,6 @@ public class Person {
 	
 	public void serializeSK(File f){
 		SerializeUtils.serialize(this.SK, f);
-	}*/
+	}
 
 }

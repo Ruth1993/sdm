@@ -34,6 +34,7 @@ public class Hospital {
 		this.name = name;
 	}
 
+	/**
 	public List<Doctor> getDoctors() {
 		// to be implemented
 		// sql query
@@ -44,7 +45,7 @@ public class Hospital {
 		// to be implemented
 		// sql query
 		return null;
-	}
+	}*/
 
 	public void addDoctor(int id_doctor) {
 		// to be implemented
