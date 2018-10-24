@@ -3,10 +3,13 @@ package cn.edu.pku.ss.crypto.abe.apiV2;
 import java.io.File;
 
 public class Example {
+	
+	private static final String prefix = "test_output/apiv2Example/";
+	
 	public static void main(String[] args) {
-		Server server = new Server();
+		Server server = new Server(); // Create Server's KeyPair (PK, SK)
 		Client PKUClient = new Client(new String[]{"PKU", "Student"});
-		Client THUClient = new Client(new String[]{"THU", "Student"});
+		Client THUClient = new Client(new String[]{"THU", "Student2"});
 		Client TeacherClient = new Client(new String[]{"PKU", "Teacher"});
 		//client从server处获取公钥字符串
 		String PKJSONString = server.getPublicKeyInString();
@@ -25,14 +28,14 @@ public class Example {
 		TeacherClient.setSK(SKJSONString);
 		
 		//加密
-		String outputFileName = "test.cpabe";
-		File in = new File("README.md");
-		String policy = "Student OR Teacher";
+		String outputFileName = prefix + "test.cpabe";
+		File in = new File(prefix + "README.md");
+		String policy = "Student OR Teacher"; // Policy can be in a shape of "Student OR (Teacher & something)"
 		PKUClient.enc(in, policy, outputFileName);
 		
 		//解密
 		in = new File(outputFileName);
-//		THUClient.dec(in);
-		TeacherClient.dec(in);
+		THUClient.dec(in);
+//		TeacherClient.dec(in);
 	}
 }
