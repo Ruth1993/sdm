@@ -99,7 +99,10 @@ public class Client {
 			e.printStackTrace();
 		}
 		Element m = CPABEImpl.dec(ciphertext, SK, PK);
-		AES.crypto(Cipher.DECRYPT_MODE, dis, os, m);
+
+		if (m != null) {
+			AES.crypto(Cipher.DECRYPT_MODE, dis, os, m);
+		}
 	}
 	
 	public void serializePK(File f){
