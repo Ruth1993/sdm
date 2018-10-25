@@ -43,10 +43,6 @@ public class Person {
 		return attrs;
 	}
 	
-	public void setAttrs(String[] attrs){
-		this.attrs = attrs;
-	}
-	
 	public PublicKey getPK() {
 		return PK;
 	}
