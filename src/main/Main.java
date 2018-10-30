@@ -40,8 +40,8 @@ public class Main {
 		
 		// Test system
 		Server server = new Server();
-		Person p1 = new Person(1, new String[]{"Patient"});
-		Person p2 = new Person(2, new String[]{"Doctor"});
+		Person p1 = new Person(1, "Alice", new String[]{"Patient"});
+		Person p2 = new Person(2, "Bob", new String[]{"Doctor"});
 		
 		//client从server处获取公钥字符串
 		String PKJSONString = server.getPublicKeyInString();

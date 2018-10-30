@@ -22,28 +22,8 @@ public class Insurance {
 		return id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
 	public String getName() {
 		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public List<Person> getClients() {
-		// to be implemented
-		// sql query
-		return null;
-	}
-
-	public Person getClients(int id) {
-		// to be implemented
-		// sql query
-		return null;
 	}
 	
 	Connection connection = DBConnection.getConnection();
@@ -118,5 +98,15 @@ public class Insurance {
 			e.printStackTrace();
 		}
 
+	}
+	
+	/**
+	 * Get list of client id's belonging to this insurance
+	 * @return
+	 */
+	public List<Integer> getClients() {
+		// to be implemented
+		// sql query
+		return null;
 	}
 }
