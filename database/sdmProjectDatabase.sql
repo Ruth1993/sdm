@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Serveur: localhost
--- Généré le : Lun 22 Octobre 2018 à 11:54
+-- Généré le : Mer 31 Octobre 2018 à 12:15
 -- Version du serveur: 5.5.8
 -- Version de PHP: 5.2.17
 
@@ -45,18 +45,25 @@ INSERT INTO `companies` (`id`, `name`) VALUES
 --
 
 CREATE TABLE IF NOT EXISTS `employments` (
+  `id_person` int(11) NOT NULL,
+  `type_job` varchar(255) NOT NULL,
+  `type_company` varchar(255) NOT NULL,
   `id_company` int(11) NOT NULL,
-  `id_employee` int(11) NOT NULL,
-  KEY `id_company` (`id_company`),
-  KEY `id_employee` (`id_employee`)
+  KEY `type_job` (`type_job`),
+  KEY `type_company` (`type_company`),
+  KEY `id_person` (`id_person`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 --
 -- Contenu de la table `employments`
 --
 
-INSERT INTO `employments` (`id_company`, `id_employee`) VALUES
-(1, 2);
+INSERT INTO `employments` (`id_person`, `type_job`, `type_company`, `id_company`) VALUES
+(1, 'doctor', 'hospital', 1),
+(2, 'employee', 'company', 1),
+(3, 'employer', 'company', 1),
+(4, 'insurance provider', 'insurance', 1),
+(5, 'nurse', 'hospital', 1);
 
 -- --------------------------------------------------------
 
@@ -90,14 +97,14 @@ CREATE TABLE IF NOT EXISTS `health_clubs_patients` (
   PRIMARY KEY (`id`),
   KEY `id_patient` (`id_patient`),
   KEY `id_health_club` (`id_health_club`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Contenu de la table `health_clubs_patients`
 --
 
 INSERT INTO `health_clubs_patients` (`id`, `id_patient`, `id_health_club`) VALUES
-(1, 2, 1);
+(2, 2, 1);
 
 -- --------------------------------------------------------
 
@@ -201,7 +208,7 @@ CREATE TABLE IF NOT EXISTS `patients_basic_health_info` (
 --
 
 INSERT INTO `patients_basic_health_info` (`id_patient`, `blood_type`, `weight`, `height`, `emergency_contact`, `id_family_doctor`) VALUES
-(2, 'Blood type 1', 'Weight 1', 'Height 1', 'Emergency contact 1', '1');
+(2, 'type2', 'weight2', 'height2', 'contact2', 'familydoctor2');
 
 -- --------------------------------------------------------
 
@@ -225,7 +232,7 @@ CREATE TABLE IF NOT EXISTS `patients_health_clubs_visits` (
 --
 
 INSERT INTO `patients_health_clubs_visits` (`id_patient_healthclub`, `date`, `duration`, `reasons`, `results`, `comments`) VALUES
-(1, 'Date 1', 'Duration 1', 'Reasons 1', 'Reasults 1', 'Comments 1');
+(2, 'date1', 'duration1', 'reason1', 'result1', 'comment');
 
 -- --------------------------------------------------------
 
@@ -248,7 +255,7 @@ CREATE TABLE IF NOT EXISTS `patients_medicines` (
 --
 
 INSERT INTO `patients_medicines` (`medicine_name`, `dosage`, `date_start`, `date_end`, `id_visit`) VALUES
-('Medicine 1', 'Dosage 1', 'Start 1', 'End 1', 1);
+('medicine', 'dosage', 'date', 'date', 2);
 
 -- --------------------------------------------------------
 
@@ -266,14 +273,14 @@ CREATE TABLE IF NOT EXISTS `patients_visits` (
   `id_hospital_doctors` varchar(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `id_patient` (`id_patient`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
 
 --
 -- Contenu de la table `patients_visits`
 --
 
 INSERT INTO `patients_visits` (`id`, `id_patient`, `date_start`, `date_end`, `reason`, `results`, `id_hospital_doctors`) VALUES
-(1, 2, 'Start 1', 'End 1', 'Reason 1', 'Results 1', '1');
+(2, 2, 'date', 'date', 'reason', 'results', 'hospital doctor');
 
 -- --------------------------------------------------------
 
@@ -291,7 +298,7 @@ CREATE TABLE IF NOT EXISTS `persons_basic_info` (
   `address` varchar(255) NOT NULL,
   `phone_number` varchar(255) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=6 ;
 
 --
 -- Contenu de la table `persons_basic_info`
@@ -299,29 +306,10 @@ CREATE TABLE IF NOT EXISTS `persons_basic_info` (
 
 INSERT INTO `persons_basic_info` (`id`, `name`, `birth_date`, `birth_place`, `gender`, `nationality`, `address`, `phone_number`) VALUES
 (1, 'Name 1', 'Birth date 1', 'Birth place 1', 'Gender 1', 'Nationality 1', 'Address 1', 'Phone number 1'),
-(2, 'Name 2', 'Birth date 2', 'Birth place 2', 'Gender 2', 'Nationality 2', 'Address 2', 'Phone number 2');
-
--- --------------------------------------------------------
-
---
--- Structure de la table `persons_roles`
---
-
-CREATE TABLE IF NOT EXISTS `persons_roles` (
-  `id_role` int(11) NOT NULL AUTO_INCREMENT,
-  `role` varchar(255) NOT NULL,
-  `id_person` int(11) NOT NULL,
-  PRIMARY KEY (`id_role`),
-  KEY `id_person` (`id_person`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=3 ;
-
---
--- Contenu de la table `persons_roles`
---
-
-INSERT INTO `persons_roles` (`id_role`, `role`, `id_person`) VALUES
-(1, 'doctor', 1),
-(2, 'patient', 2);
+(2, 'Name 2', 'Birth date 2', 'Birth place 2', 'Gender 2', 'Nationality 2', 'Address 2', 'Phone number 2'),
+(3, 'Name3', 'birth_date3', 'birth_place3', 'gender3', 'nationality3', 'address3', 'phone_number3'),
+(4, 'name4', 'birth_date4', 'birth_place4', 'gender4', 'nationality4', 'address4', 'phone_number4'),
+(5, 'name5', 'birth_date5', 'birth_place5', 'gender5', 'nationality5', 'address5', 'number5');
 
 --
 -- Contraintes pour les tables exportées
@@ -331,35 +319,34 @@ INSERT INTO `persons_roles` (`id_role`, `role`, `id_person`) VALUES
 -- Contraintes pour la table `employments`
 --
 ALTER TABLE `employments`
-  ADD CONSTRAINT `employments_ibfk_2` FOREIGN KEY (`id_employee`) REFERENCES `persons_roles` (`id_role`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `employments_ibfk_1` FOREIGN KEY (`id_company`) REFERENCES `companies` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `employments_ibfk_1` FOREIGN KEY (`id_person`) REFERENCES `persons_basic_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `health_clubs_patients`
 --
 ALTER TABLE `health_clubs_patients`
-  ADD CONSTRAINT `health_clubs_patients_ibfk_2` FOREIGN KEY (`id_health_club`) REFERENCES `health_clubs` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `health_clubs_patients_ibfk_1` FOREIGN KEY (`id_patient`) REFERENCES `persons_roles` (`id_role`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `health_clubs_patients_ibfk_3` FOREIGN KEY (`id_patient`) REFERENCES `persons_basic_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `health_clubs_patients_ibfk_2` FOREIGN KEY (`id_health_club`) REFERENCES `health_clubs` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `hospitals_doctors`
 --
 ALTER TABLE `hospitals_doctors`
-  ADD CONSTRAINT `hospitals_doctors_ibfk_2` FOREIGN KEY (`id_doctor`) REFERENCES `persons_roles` (`id_role`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `hospitals_doctors_ibfk_2` FOREIGN KEY (`id_doctor`) REFERENCES `persons_basic_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `hospitals_doctors_ibfk_1` FOREIGN KEY (`id_hospital`) REFERENCES `hospitals` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `insurances_patients`
 --
 ALTER TABLE `insurances_patients`
-  ADD CONSTRAINT `insurances_patients_ibfk_2` FOREIGN KEY (`id_insurance`) REFERENCES `insurances` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
-  ADD CONSTRAINT `insurances_patients_ibfk_1` FOREIGN KEY (`id_patient`) REFERENCES `persons_roles` (`id_role`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `insurances_patients_ibfk_3` FOREIGN KEY (`id_patient`) REFERENCES `persons_basic_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
+  ADD CONSTRAINT `insurances_patients_ibfk_2` FOREIGN KEY (`id_insurance`) REFERENCES `insurances` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `patients_basic_health_info`
 --
 ALTER TABLE `patients_basic_health_info`
-  ADD CONSTRAINT `patients_basic_health_info_ibfk_1` FOREIGN KEY (`id_patient`) REFERENCES `persons_roles` (`id_role`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `patients_basic_health_info_ibfk_1` FOREIGN KEY (`id_patient`) REFERENCES `persons_basic_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Contraintes pour la table `patients_health_clubs_visits`
@@ -377,10 +364,4 @@ ALTER TABLE `patients_medicines`
 -- Contraintes pour la table `patients_visits`
 --
 ALTER TABLE `patients_visits`
-  ADD CONSTRAINT `patients_visits_ibfk_1` FOREIGN KEY (`id_patient`) REFERENCES `persons_roles` (`id_role`) ON DELETE CASCADE ON UPDATE CASCADE;
-
---
--- Contraintes pour la table `persons_roles`
---
-ALTER TABLE `persons_roles`
-  ADD CONSTRAINT `persons_roles_ibfk_1` FOREIGN KEY (`id_person`) REFERENCES `persons_basic_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
+  ADD CONSTRAINT `patients_visits_ibfk_1` FOREIGN KEY (`id_patient`) REFERENCES `persons_basic_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
