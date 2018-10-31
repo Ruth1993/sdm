@@ -3,15 +3,12 @@ package main;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.io.File;
 import java.sql.Connection;
 import java.sql.Statement;
-import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
+import cn.edu.pku.ss.crypto.abe.apiV2.Server;
 import databaseAccess.DBConnection;
-import databaseAccess.DBConnection2;
 import sdm.*;
 
 
@@ -21,80 +18,49 @@ public class Main {
 		// TODO Auto-generated method stub
 		System.out.println("SDM Project");
 		
-
-//		// Test DB connection
-//		Connection connection = DBConnection.getConnection();
-//		try {
-//			Statement Statement = connection.createStatement();
-//			ResultSet res = Statement.executeQuery("SELECT * FROM sdmproject.health_clubs");
-//
-//			while (res.next()) {
-//				System.out.println(res.getString("id"));
-//			}
-//			
-//			// Test Update
-//			int testUpdate = connection
-//			res.close();
-//			Statement.close();
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-		
-		// Test DB connection2
-		DBConnection2 DBConn2 = new DBConnection2();
+		// Test DB connection
+		Connection connection = DBConnection.getConnection();
 		try {
-			// Selecting from DB
-			String selectQuery = "SELECT * FROM sdmproject.health_clubs";
-			ResultSet res = DBConn2.query(selectQuery);
+			Statement Statement = connection.createStatement();
+			ResultSet res = Statement.executeQuery("SELECT * FROM sdmproject.health_clubs");
+
 			while (res.next()) {
 				System.out.println(res.getString("id"));
 			}
-			
-			// Updating DB
-			String updateQuery = "UPDATE sdmproject.persons_basic_info SET name = 'Sophie Martin 1' WHERE id='PE01' LIMIT 1;";
-			int testUpdate = DBConn2.update(updateQuery);
-			System.out.println("Update: "+testUpdate);
-			
-			// Close the ResultSet
-			if (res != null) {
-				res.close();
-			}
-			
-			// Close the db connection
-			DBConn2.closeConnection();
+			res.close();
+			Statement.close();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}		
-
-//		/**
-//		 * All of the below is for testing purposes
-//		 */
-//		
-//		Date birth_date = new Date(1993, 10, 1);
-//		List<Role> roles = new ArrayList<Role>();
-//		roles.add(new Patient());
-//		roles.add(new Employer());
-//		
-//		Person p1 = new Person(1, "Valentine", birth_date, "Female", "A", roles);
-//		Person p2 = new Person(2, "Metin", birth_date, "Male", "B", null);
-//		Person p3 = new Person(3, "Ivan", birth_date, "Male", "AB", null);
-//		Person p4 = new Person(4, "Ruth", birth_date, "Female", "O", null);
+		}
 		
-		/*
-		 * 
-		 * p3 = new Doctor()
-		 * 
-		 * Doctor change to person
-		 * p3.transfertoperson
-		 */
+		// Test system
+		Server server = new Server();
+		Person p1 = new Person(1, "Alice", new String[]{"Patient"});
+		Person p2 = new Person(2, "Bob", new String[]{"Doctor"});
 		
-//	
-//		System.out.println(p1.patient().test());
-//		System.out.println(p1.doctor().test());
-//		System.out.println(p1.employer().test());
+		//client server
+		String PKJSONString = server.getPublicKeyInString();
+		p1.setPK(PKJSONString);
+		p2.setPK(PKJSONString);
 
+		//client server
+		String SKJSONString = server.generateSecretKey(p1.getAttrs());
+		p1.setSK(SKJSONString);
+		
+		SKJSONString = server.generateSecretKey(p2.getAttrs());
+		p2.setSK(SKJSONString);
+		
+		// TODO we need to change the input file to a String[] with the parameters for the query and outputFileName to a String[] with the encrypted parameters
+		String outputFileName = "test.cpabe";
+		File in = new File("README.md");
+		String policy = "Doctor OR HealthClub";
+		p1.enc(in, policy, outputFileName);
+		
+		//
+		in = new File(outputFileName);
+//		THUClient.dec(in);
+		p2.dec(in);
 	}
 
 }
