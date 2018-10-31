@@ -74,8 +74,9 @@ public class Person {
 		
 		this.addPersonsBasicInfoDB(basic_info_policy, name, birth_date, birth_place, gender, nationality, address, phone_no);
 	}
+	
 	/**
-	 * Shorter constructor of Person with default parameters already filled in for more efficient testing purposes
+	 * Shorter constructor for Person with default parameter already filled in
 	 * @param id
 	 * @param name
 	 * @param attrs
