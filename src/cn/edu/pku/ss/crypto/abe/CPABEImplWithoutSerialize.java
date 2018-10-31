@@ -115,6 +115,23 @@ public class CPABEImplWithoutSerialize {
 		}
 	}
 	
+	public static String enc_string(String input, Policy p, PublicKey PK){
+		String output = "";
+		
+		Element m = PairingManager.defaultPairing.getGT().newRandomElement();
+		Element s = pairing.getZr().newElement().setToRandom();
+		fill_policy(p, s, PK);
+		Ciphertext ciphertext = new Ciphertext();
+		ciphertext.p = p;
+		//此处m.duplicate()是为了后面AES加密中还需要用到m
+		ciphertext.Cs = m.duplicate().mul(PK.g_hat_alpha.duplicate().powZn(s));
+		ciphertext.C = PK.h.duplicate().powZn(s); 
+		
+		output = AES.crypto_string(Cipher.ENCRYPT_MODE, input, m);
+		
+		return output;
+	}
+	
 	/**
 	public static void enc(String[] input, Policy p, PublicKey PK, String[] output){
 		Element m = PairingManager.defaultPairing.getGT().newRandomElement();

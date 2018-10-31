@@ -92,7 +92,8 @@ public class Person {
 		
 		String default_policy = "READ & (person_company|all_hospital|all_doctor|person_healthclub|person_insurance|person)) | (WRITE & (person)";
 		
-		this.addPersonsBasicInfoDB(default_policy, name, this.birth_date, this.birth_place, this.gender, this.nationality, "Campuslaan 1", "0612345678");
+//		this.addPersonsBasicInfoDB(default_policy, name, this.birth_date, this.birth_place, this.gender, this.nationality, "Campuslaan 1", "0612345678");
+		// default_policy is not yet used in addPersonsBasicInfoDB(). 
 	}
 	
 	public String[] getAttrs(){
@@ -200,6 +201,16 @@ public class Person {
 		Parser parser = new Parser();
 		Policy p = parser.parse(policy);
 		CPABEImplWithoutSerialize.enc(in, p, this.PK, outputFileName);
+	}
+	
+	public String enc_string(String input, String policy){
+		String ciphertext = "";
+		
+		Parser parser = new Parser();
+		Policy p = parser.parse(policy);
+		ciphertext = CPABEImplWithoutSerialize.enc_string(input, p, this.PK);
+		
+		return ciphertext;
 	}
 	
 	//Change decryption function with mediator

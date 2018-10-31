@@ -65,6 +65,33 @@ public class AES {
 			e1.printStackTrace();
 		}
 	}
+	public static String crypto_string(int mode, String plaintext, Element e){
+		String output = "";
+		
+		byte[] plaintext_bytes = plaintext.getBytes();
+		try {
+			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+			SecretKey secKey = generateSecretKeyFromElement(e);
+			cipher.init(mode, secKey);
+			
+//			CipherOutputStream cos = new CipherOutputStream(os, cipher);
+//			byte[] block = new byte[8];
+//			int i;
+//			while ((i = is.read(block)) != -1) {
+//			    cos.write(block, 0, i);
+//			}
+//			cos.close();
+			byte[] encrypted = new byte[cipher.getOutputSize(plaintext_bytes.length)];
+			int enc_len = cipher.update(plaintext_bytes, 0, plaintext_bytes.length, encrypted, 0);
+			enc_len += cipher.doFinal(encrypted, enc_len);
+			
+			output = encrypted.toString();
+			
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
+		return output;
+	}
 
 	private static SecretKey generateSecretKeyFromElement(Element e) {
 		System.out.println("e:" + e);
