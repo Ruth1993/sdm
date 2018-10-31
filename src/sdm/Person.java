@@ -247,6 +247,43 @@ public class Person {
 		AES.crypto(Cipher.DECRYPT_MODE, dis, os, m);
 	}
 	
+	public String dec_string(File in, String ciphertext_input) {
+		String plaintext_output = "";
+		
+		String ciphertextFileName = null; 
+		DataInputStream dis = null;
+		try {
+			ciphertextFileName = in.getCanonicalPath();
+			dis = new DataInputStream(new FileInputStream(in));
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		Ciphertext ciphertext = SerializeUtils._unserialize_string(Ciphertext.class, dis, ciphertext_input);
+		
+		String output = null;
+		if(ciphertextFileName.endsWith(".cpabe")){
+			int end = ciphertextFileName.indexOf(".cpabe");
+			output = ciphertextFileName.substring(0, end);
+		}
+		else{
+			output = ciphertextFileName + ".out";
+		}
+		File outputFile = CPABEImpl.createNewFile(output);
+		OutputStream os = null;
+		try {
+			os =  new FileOutputStream(outputFile);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		Element m = CPABEImpl.dec(ciphertext, SK, PK);
+		if (m != null) {
+			AES.crypto(Cipher.DECRYPT_MODE, dis, os, m);
+		}
+		return plaintext_output;
+	}
+	
 	public void serializePK(File f){
 		SerializeUtils.serialize(this.PK, f);
 	}

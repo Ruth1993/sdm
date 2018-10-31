@@ -54,20 +54,21 @@ public class Main {
 		p2.setSK(SKJSONString);
 		
 		
-		// TODO we need to change the input file to a String[] with the parameters for the query and outputFileName to a String[] with the encrypted parameters
+		// TODO we need to change the input file to a String[] with the parameters for the query and 
+		// outputFileName to a String[] with the encrypted parameters
 		String outputFileName = "test.cpabe";
-		File in = new File("README.md");
-		p1.enc(in, policy, outputFileName);
+//		File in = new File("README.md");
+//		p1.enc(in, policy, outputFileName);
 		
 		String plaintext = "I am healthy.";
 		String ciphertext = p1.enc_string(plaintext, policy);
-		System.out.println(ciphertext);
-//		[B@1165b38
+		System.out.println(ciphertext); //[B@1165b38
 		
-		//
-		in = new File(outputFileName);
-//		THUClient.dec(in);
-		p2.dec(in);
+		//		
+		File in = new File(outputFileName);
+//		p1.dec(in);
+		String recovered = p2.dec_string(in, ciphertext);
+//		System.out.println(recovered);
 	}
 
 }
