@@ -115,7 +115,7 @@ public class CPABEImplWithoutSerialize {
 		}
 	}
 	
-	
+	/**
 	public static void enc(String[] input, Policy p, PublicKey PK, String[] output){
 		Element m = PairingManager.defaultPairing.getGT().newRandomElement();
 		Element s = pairing.getZr().newElement().setToRandom();
@@ -143,7 +143,7 @@ public class CPABEImplWithoutSerialize {
 				e.printStackTrace();
 			}
 		}
-	}
+	}*/
 	
 	public static Element dec(Ciphertext ciphertext, SecretKey SK, PublicKey PK){
 		check_sat(SK, ciphertext.p);
