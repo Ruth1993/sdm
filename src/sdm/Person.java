@@ -131,7 +131,7 @@ public class Person {
 	 */
 	public void addPersonsBasicInfoDB(String policy, String name, Date birth_date, String birth_place, String gender, String nationality, String address, String phone_no) {
 		//TODO The values inserted into the database should be the encrypted values according to this person's policy
-		DBConnection.update("INSERT INTO sdmproject.persons_basic_info (id, name, birth_date, birth_place, gender, nationality, address, phone_number) VALUES ("+this.id+", '"+name+"', '"+birth_date+"', '"+birth_place+"', '"+gender+"', '"+nationality+"', '"+ address+"', '"+phone_no+"')");
+		DBConnection.update("INSERT INTO sdmproject.persons_basic_info (name, birth_date, birth_place, gender, nationality, address, phone_number) VALUES ('"+name+"', '"+birth_date+"', '"+birth_place+"', '"+gender+"', '"+nationality+"', '"+ address+"', '"+phone_no+"')");
 	}
 	
 	/**
