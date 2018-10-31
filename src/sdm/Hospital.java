@@ -22,18 +22,11 @@ public class Hospital {
 		return id;
 	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
-
 	public String getName() {
 		return name;
 	}
 
-	public void setName(String name) {
-		this.name = name;
-	}
-
+	/**
 	public List<Doctor> getDoctors() {
 		// to be implemented
 		// sql query
@@ -44,7 +37,7 @@ public class Hospital {
 		// to be implemented
 		// sql query
 		return null;
-	}
+	}*/
 
 	public void addDoctor(int id_doctor) {
 		// to be implemented

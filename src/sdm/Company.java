@@ -12,6 +12,8 @@ import databaseAccess.DBConnection;
 public class Company {
 	private String id;
 	private String name;
+	
+	Connection connection = DBConnection.getConnection();
 
 	public Company(String id, String name) {
 		this.id = id;
@@ -33,14 +35,6 @@ public class Company {
 	public void setName(String name) {
 		this.name = name;
 	}
-
-	public void addEmployer(int id) {
-		// to be implemented
-		// sql query, insert employer id (id of person that is the employer?)
-		// and company id into Employments
-	}
-
-	Connection connection = DBConnection.getConnection();
 
 	public List<Company> getAll() {
 		List<Company> companies = new LinkedList<>();
@@ -112,5 +106,9 @@ public class Company {
 			e.printStackTrace();
 		}
 
+	}
+	
+	public void addEmployer(int id) {
+		//DBconnection.update("INSERT INTO sdmproject.employments VALUES ('" + this.id + "','" + id + "')");
 	}
 }
