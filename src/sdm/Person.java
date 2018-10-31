@@ -64,6 +64,7 @@ public class Person {
 	}
 	
 	//Change decryption function with mediator
+	//testesttest
 	/**
 	public void dec(File in){
 		String ciphertextFileName = null; 
