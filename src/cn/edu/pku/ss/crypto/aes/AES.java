@@ -2,6 +2,7 @@ package cn.edu.pku.ss.crypto.aes;
 
 import it.unisa.dia.gas.jpbc.Element;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -54,7 +55,21 @@ public class AES {
 			while ((i = is.read(block)) != -1) {
 			    cos.write(block, 0, i);
 			}
+			
 			cos.close();
+			
+			
+			// Test
+			ByteArrayOutputStream bos2 = new ByteArrayOutputStream();
+			CipherOutputStream cos2 = new CipherOutputStream(bos2, cipher);
+			cos2.write("I am healthy.".getBytes());
+			cos2.flush();
+			cos2.close();
+			byte[] encrypted = bos2.toByteArray();
+			String test2 = encrypted.toString();
+			FileOutputStream fos2 = new FileOutputStream(new File("test2.cpabe"));
+			fos2.write(encrypted, 0, encrypted.length);
+			fos2.close();
 		} catch (NoSuchAlgorithmException e1) {
 			e1.printStackTrace();
 		} catch (NoSuchPaddingException e1) {
@@ -74,19 +89,20 @@ public class AES {
 			SecretKey secKey = generateSecretKeyFromElement(e);
 			cipher.init(mode, secKey);
 			
-//			CipherOutputStream cos = new CipherOutputStream(os, cipher);
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			CipherOutputStream cos = new CipherOutputStream(bos, cipher);
 //			byte[] block = new byte[8];
 //			int i;
 //			while ((i = is.read(block)) != -1) {
 //			    cos.write(block, 0, i);
 //			}
-//			cos.close();
-			byte[] encrypted = new byte[cipher.getOutputSize(plaintext_bytes.length)];
-			int enc_len = cipher.update(plaintext_bytes, 0, plaintext_bytes.length, encrypted, 0);
-			enc_len += cipher.doFinal(encrypted, enc_len);
+			cos.write(plaintext_bytes);
+			cos.flush();
+			cos.close();
 			
-			output = encrypted.toString();
 			
+			byte[] encrypted = bos.toByteArray();			
+			output = encrypted.toString();			
 		} catch (Exception ex) {
 			ex.printStackTrace();
 		}

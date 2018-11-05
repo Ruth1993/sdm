@@ -57,15 +57,15 @@ public class Main {
 		// TODO we need to change the input file to a String[] with the parameters for the query and 
 		// outputFileName to a String[] with the encrypted parameters
 		String outputFileName = "test.cpabe";
-//		File in = new File("README.md");
-//		p1.enc(in, policy, outputFileName);
+		File in = new File("README.md");
+		p1.enc(in, policy, outputFileName);
 		
 		String plaintext = "I am healthy.";
 		String ciphertext = p1.enc_string(plaintext, policy);
 		System.out.println(ciphertext); //[B@1165b38
 		
 		//		
-		File in = new File(outputFileName);
+		in = new File(outputFileName);
 //		p1.dec(in);
 		String recovered = p2.dec_string(in, ciphertext);
 //		System.out.println(recovered);
