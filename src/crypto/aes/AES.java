@@ -4,7 +4,6 @@ import it.unisa.dia.gas.jpbc.Element;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -44,11 +43,8 @@ public class AES {
 	}
 	public static void crypto(int mode, InputStream is, OutputStream os, Element e){
 		try {
-			
 			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-			
 			SecretKey secKey = generateSecretKeyFromElement(e);
-			
 			cipher.init(mode, secKey);
 			
 			CipherOutputStream cos = new CipherOutputStream(os, cipher);
@@ -58,7 +54,6 @@ public class AES {
 			    cos.write(block, 0, i);
 			}
 			cos.close();
-			
 		} catch (NoSuchAlgorithmException e1) {
 			e1.printStackTrace();
 		} catch (NoSuchPaddingException e1) {

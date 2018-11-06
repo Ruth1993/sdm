@@ -19,8 +19,7 @@ import crypto.abe.Policy;
 import crypto.abe.SecretKey.SKComponent;
 
 public class SerializeUtils {
-	public static <T extends SimpleSerializable> T _unserialize(
-			Class<T> clazz, DataInputStream dis) {
+	public static <T extends SimpleSerializable> T _unserialize(Class<T> clazz, DataInputStream dis) {
 		T t = null;
 		Field[] fields = clazz.getDeclaredFields();
 		try {
@@ -44,38 +43,19 @@ public class SerializeUtils {
 						continue;
 					}
 					byte[] buffer = new byte[len];
-//					String name = field.getName();
+					// String name = field.getName();
 					Serializable annotation = field.getAnnotation(Serializable.class);
 					String group = annotation.group();
 					dis.read(buffer);
-					if(group.equals("Zr")){
+					if (group.equals("Zr")) {
 						e = PairingManager.defaultPairing.getZr().newElementFromBytes(buffer);
-					}
-					else if(group.equals("G1")){
+					} else if (group.equals("G1")) {
 						e = PairingManager.defaultPairing.getG1().newElementFromBytes(buffer);
-					}
-					else if(group.equals("G2")){
+					} else if (group.equals("G2")) {
 						e = PairingManager.defaultPairing.getG2().newElementFromBytes(buffer);
-					}
-					else if(group.equals("GT")){
+					} else if (group.equals("GT")) {
 						e = PairingManager.defaultPairing.getGT().newElementFromBytes(buffer);
 					}
-//					if (name.equals("g") || name.equals("h") || name.equals("C")
-//							|| name.equals("Cy") || name.equals("_Cy")) {
-//						e = PairingManager.defaultPairing.getG1()
-//								.newElementFromBytes(buffer);
-//					} else if (name.equals("gp") || name.equals("g_alpha")
-//							|| name.equals("D") || name.equals("Dj")
-//							|| name.equals("_Dj")) {
-//						e = PairingManager.defaultPairing.getG2()
-//								.newElementFromBytes(buffer);
-//					} else if (name.equals("g_hat_alpha") || name.equals("Cs")) {
-//						e = PairingManager.defaultPairing.getGT()
-//								.newElementFromBytes(buffer);
-//					} else if (name.equals("beta")) {
-//						e = PairingManager.defaultPairing.getZr()
-//								.newElementFromBytes(buffer);
-//					}
 					field.set(t, e);
 				} else if (field.getType() == Policy.class) {
 					if (mark != SimpleSerializable.PolicyMark) {
@@ -93,14 +73,13 @@ public class SerializeUtils {
 					}
 					String s = dis.readUTF();
 					field.set(t, s);
-				}
-				else if (field.getType() == int.class){
+				} else if (field.getType() == int.class) {
 					if (mark != SimpleSerializable.IntMark) {
 						System.err.println("serialize Int error!");
 						return null;
 					}
 					int i = dis.readInt();
-					field.set(t,i);
+					field.set(t, i);
 				}
 				// unserialize Array
 				else if (field.getType().isArray()) {
@@ -110,7 +89,7 @@ public class SerializeUtils {
 					}
 					Class<?> c = field.getType().getComponentType();
 					int arrlen = dis.readInt();
-					if(arrlen == 0){
+					if (arrlen == 0) {
 						field.set(t, null);
 						continue;
 					}
@@ -124,7 +103,7 @@ public class SerializeUtils {
 						Policy[] ps = new Policy[arrlen];
 						for (int i = 0; i < arrlen; i++) {
 							mark = dis.readByte();
-							if(mark != SimpleSerializable.PolicyMark){
+							if (mark != SimpleSerializable.PolicyMark) {
 								System.err.println("serialize Policy error!");
 								return null;
 							}
@@ -146,8 +125,7 @@ public class SerializeUtils {
 		return t;
 	}
 
-	public static <T extends SimpleSerializable> T unserialize(Class<T> clazz,
-			File file) {
+	public static <T extends SimpleSerializable> T unserialize(Class<T> clazz, File file) {
 		DataInputStream dis = null;
 		try {
 			dis = new DataInputStream(new FileInputStream(file));
@@ -163,10 +141,8 @@ public class SerializeUtils {
 		}
 		return null;
 	}
-	
 
-	private static <T extends SimpleSerializable> void _serialize(T obj,
-			DataOutputStream dos) {
+	public static <T extends SimpleSerializable> void _serialize(T obj, DataOutputStream dos) {
 		Field[] fields = obj.getClass().getDeclaredFields();
 		try {
 			for (Field field : fields) {
@@ -212,7 +188,7 @@ public class SerializeUtils {
 						int len = array == null ? 0 : array.length;
 						dos.writeByte(SimpleSerializable.ArrayMark);
 						dos.writeInt(len);
-						if(len == 0){
+						if (len == 0) {
 							continue;
 						}
 						for (int i = 0; i < len; i++) {
@@ -247,8 +223,8 @@ public class SerializeUtils {
 			}
 		}
 	}
-	
-	public static <T extends SimpleSerializable> T constructFromByteArray(Class<T> clazz, byte[] b){
+
+	public static <T extends SimpleSerializable> T constructFromByteArray(Class<T> clazz, byte[] b) {
 		File tmp = null;
 		try {
 			tmp = File.createTempFile("random", "bytearray");
@@ -260,8 +236,8 @@ public class SerializeUtils {
 		}
 		return unserialize(clazz, tmp);
 	}
-	
-	public static <T extends SimpleSerializable> byte[] convertToByteArray(T obj){
+
+	public static <T extends SimpleSerializable> byte[] convertToByteArray(T obj) {
 		File tmp = null;
 		try {
 			tmp = File.createTempFile("random", "bytearray");

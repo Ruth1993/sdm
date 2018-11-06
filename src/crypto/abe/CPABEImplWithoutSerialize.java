@@ -1,10 +1,12 @@
 package crypto.abe;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -18,6 +20,13 @@ import crypto.aes.AES;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import crypto.abe.Ciphertext;
+import crypto.abe.MasterKey;
+import crypto.abe.PairingManager;
+import crypto.abe.Policy;
+import crypto.abe.Polynomial;
+import crypto.abe.PublicKey;
+import crypto.abe.SecretKey;
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Pairing;
 
@@ -29,15 +38,34 @@ public class CPABEImplWithoutSerialize {
 		public PublicKey getPK() {
 			return PK;
 		}
+		
+		public void setPK(String PKJSONString) {
+			JSONObject json = JSON.parseObject(PKJSONString);
+			byte[] b = json.getBytes("PK");
+			this.PK = SerializeUtils.constructFromByteArray(PublicKey.class, b);
+		}
 
 		public MasterKey getMK() {
 			return MK;
+		}
+		
+		public void setMK(String MKJSONString) {
+			JSONObject json = JSON.parseObject(MKJSONString);
+			byte[] b = json.getBytes("MK");
+			this.MK = SerializeUtils.constructFromByteArray(MasterKey.class, b);
 		}
 
 		public String getPKJSONString(){
 			JSONObject json = new JSONObject();
 			byte[] b = SerializeUtils.convertToByteArray(this.PK);
 			json.put("PK", b);
+			return JSON.toJSONString(json);
+		}
+		
+		public String getMKJSONString(){
+			JSONObject json = new JSONObject();
+			byte[] b = SerializeUtils.convertToByteArray(this.MK);
+			json.put("MK", b);
 			return JSON.toJSONString(json);
 		}
 	}
@@ -85,8 +113,8 @@ public class CPABEImplWithoutSerialize {
 		return JSON.toJSONString(json);
 	}
 	
-	public static void enc(File file, Policy p, PublicKey PK, String outputFileName){
-		File ciphertextFile = createNewFile(outputFileName);
+	public static byte[] enc(String str, Policy p, PublicKey PK, String outputFileName){
+		//File ciphertextFile = createNewFile(outputFileName);
 		Element m = PairingManager.defaultPairing.getGT().newRandomElement();
 		Element s = pairing.getZr().newElement().setToRandom();
 		fill_policy(p, s, PK);
@@ -95,15 +123,19 @@ public class CPABEImplWithoutSerialize {
 		//此处m.duplicate()是为了后面AES加密中还需要用到m
 		ciphertext.Cs = m.duplicate().mul(PK.g_hat_alpha.duplicate().powZn(s));
 		ciphertext.C = PK.h.duplicate().powZn(s); 
-		
-		SerializeUtils.serialize(ciphertext, ciphertextFile);
-		FileInputStream fis = null;
-		FileOutputStream fos = null;
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		DataOutputStream dos = new DataOutputStream(os);
+		//SerializeUtils._serialize(ciphertext, ciphertextFile);
+		SerializeUtils._serialize(ciphertext, dos);
+		InputStream fis = null;
+		OutputStream fos = null;
 		try {
-			fis = new FileInputStream(file);
-			fos = new FileOutputStream(ciphertextFile, true);
+			fis = new ByteArrayInputStream(str.getBytes());
+			//fos = new FileOutputStream(ciphertextFile, true);
+			fos = new DataOutputStream(dos);
 			AES.crypto(Cipher.ENCRYPT_MODE, fis, fos, m);
-		} catch (FileNotFoundException e) {
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 		}finally{
 			try {
@@ -113,6 +145,7 @@ public class CPABEImplWithoutSerialize {
 				e.printStackTrace();
 			}
 		}
+		return os.toByteArray();
 	}
 	
 	public static Element dec(Ciphertext ciphertext, SecretKey SK, PublicKey PK){
