@@ -6,10 +6,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import crypto.abe.api.Client;
+
 import java.sql.Connection;
 import databaseAccess.DBConnection;
 
-public class Person {
+public class Person extends Client {
 	/** Basic info */
 	private int id;
 	private String name;

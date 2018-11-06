@@ -1,4 +1,4 @@
-package crypto.abe.apiV2;
+package crypto.abe.api;
 
 import it.unisa.dia.gas.jpbc.Element;
 
@@ -75,23 +75,9 @@ public class Client {
 	}
 
 	public void dec(byte[] b) {
-		// String ciphertextFileName = null;
 		DataInputStream dis = null;
-		try {
-			// ciphertextFileName = in.getCanonicalPath();
-			dis = new DataInputStream(new ByteArrayInputStream(b));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		dis = new DataInputStream(new ByteArrayInputStream(b));
 		Ciphertext ciphertext = SerializeUtils._unserialize(Ciphertext.class, dis);
-
-		/*
-		 * String output = null; if(ciphertextFileName.endsWith(".cpabe")){ int
-		 * end = ciphertextFileName.indexOf(".cpabe"); output =
-		 * ciphertextFileName.substring(0, end); } else{ output =
-		 * ciphertextFileName + ".out"; }
-		 */
-		// File outputFile = CPABEImpl.createNewFile(output);
 		ByteArrayOutputStream os = null;
 		try {
 			os = new ByteArrayOutputStream();

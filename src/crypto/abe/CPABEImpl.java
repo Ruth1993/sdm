@@ -123,7 +123,6 @@ public class CPABEImpl {
 		fill_policy(p, s, PK);
 		Ciphertext ciphertext = new Ciphertext();
 		ciphertext.p = p;
-		// 此处m.duplicate()是为了后面AES加密中还需要用到m
 		ciphertext.Cs = m.duplicate().mul(PK.g_hat_alpha.duplicate().powZn(s));
 		ciphertext.C = PK.h.duplicate().powZn(s);
 
@@ -199,7 +198,7 @@ public class CPABEImpl {
 
 		for (i = 0; i < p.satl.size(); i++) {
 			t = lagrange_coef(p.satl, p.satl.get(i), zero);
-			expnew = exp.duplicate().mul(t); // 注意这里的duplicate
+			expnew = exp.duplicate().mul(t);
 			dec_node_flatten(r, expnew, p.children[p.satl.get(i) - 1], SK);
 		}
 	}
@@ -325,7 +324,7 @@ public class CPABEImpl {
 			if (j == i) {
 				continue;
 			}
-			t = x.duplicate().sub(pairing.getZr().newElement().set(j)); // 注意这里的duplicate
+			t = x.duplicate().sub(pairing.getZr().newElement().set(j));
 			r.mul(t);
 			t.set(i - j).invert();
 			r.mul(t);

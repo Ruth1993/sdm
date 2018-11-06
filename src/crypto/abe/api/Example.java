@@ -1,4 +1,4 @@
-package crypto.abe.apiV2;
+package crypto.abe.api;
 
 import java.io.File;
 import java.sql.Connection;
@@ -7,8 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import crypto.abe.apiV2.Client;
-import crypto.abe.apiV2.Server;
+import crypto.abe.api.Client;
+import crypto.abe.api.Server;
 import databaseAccess.DBConnection;
 
 public class Example {

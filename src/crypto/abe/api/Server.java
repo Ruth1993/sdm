@@ -1,4 +1,4 @@
-package crypto.abe.apiV2;
+package crypto.abe.api;
 
 import crypto.abe.CPABEImplWithoutSerialize;
 import crypto.abe.CPABEImplWithoutSerialize.KeyPair;
