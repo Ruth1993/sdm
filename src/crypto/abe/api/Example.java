@@ -51,12 +51,8 @@ public class Example {
 		TeacherClient.setSK(
 				"{\"SK\":\"RQAAAIBGIaoB4rroXhgARstRFAO5Va9XuoNIovlZlOouXVpd5O0CRn8VT8RT47z/dS2jtvqfPB54w4YrWKFJhXTBDCHimjHzkMgVEJTL3nrNdzazcs7oGWXyEReoy9Rn96yohL1DERoLLADLVPtTa2vjEWFnK0a06cee6xhftPalC8G5zFsAAAACUwADUEtVRQAAAICjsTlhjr6Dr8gNv6BTsuFD9GUSxok4cGuFBYqfP88yFL00mdmkZVKjHhBJXCtjW2rhz/MHxomz3umF+jWgoRuyhkDbwk8IuSG5Q2TaFnUYlKXY9AdaskOeQtHqoUKuUrriv666qcacoPLbr7NKdURvcwT6ozPPLvDfymxq8dFzekUAAACAKhjvH1Seja+kYxz6bBiqoAnxjheGGguAZDHha/mtJMzlzOjmxOpHd3imj+vtXhKuGsa+odO0NIafHLT8T+Sh7yy0W0H+SnI3Ocr9q1vLxjVnn/QXxf67OCY9teep830tJ2ahAxDl+F6KsL/EwwCC1FDoVPdX62ALZNYhURfr5DpTAAdUZWFjaGVyRQAAAICjsTlhjr6Dr8gNv6BTsuFD9GUSxok4cGuFBYqfP88yFL00mdmkZVKjHhBJXCtjW2rhz/MHxomz3umF+jWgoRuyhkDbwk8IuSG5Q2TaFnUYlKXY9AdaskOeQtHqoUKuUrriv666qcacoPLbr7NKdURvcwT6ozPPLvDfymxq8dFzekUAAACAM2Fo8KZP/x2r/Xzm2rtvY5RTVGW8gogeXLibAaPEfCfCJE6NMMAs5phZqULaiTGrO1R4nVUafRmg6kHzo46iOGjgKrrD+NXkmV+0NHr3zk+S19yhZMH8J0QmQWJoh1Qn6vFWVV3vITw2ccv3qVswGGou3YkUn3Qvo4p8BbWttSY=\"}");
 
-		// º”√‹
-		String outputFileName = "test.cpabe";
-		File in = new File("README.md");
 		String policy = "Student OR Teacher";
-		byte[] b1 = PKUClient.enc("The implementation of Ciphertext Policy Attribute Based Encryption in Java.", policy,
-				outputFileName);
+		byte[] b1 = PKUClient.enc("The implementation of Ciphertext Policy Attribute Based Encryption in Java.", policy);
 		System.out.println(b1);
 		Connection connection = DBConnection.getConnection();
 		String sql = "INSERT INTO testtable (ciphertext) VALUES(?)";

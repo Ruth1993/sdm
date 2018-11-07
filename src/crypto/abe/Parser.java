@@ -21,7 +21,7 @@ import java.util.ArrayList;
 //#line 21 "Parser.java"
 
 public class Parser {
-
+int kjl=0;
 	boolean yydebug; // do I want debug output?
 	int yynerrs; // number of errors so far
 	int yyerrflag; // was there an error?
@@ -380,8 +380,12 @@ public class Parser {
 				}
 
 				yyn = yyrindex[yystate]; // reduce
+				//System.out.println(yyn != 0);
+				//System.out.println((yyn += yychar) >= 0);
+				//System.out.println(yyn <= YYTABLESIZE);
+				//System.out.println(yycheck[yyn] == yychar);
 				if ((yyn != 0) && (yyn += yychar) >= 0 && yyn <= YYTABLESIZE && yycheck[yyn] == yychar) { // we
-																											// reduced!
+					System.out.println("touch"+ kjl++);																						// reduced!
 					if (yydebug)
 						debug("reduce");
 					yyn = yytable[yyn];

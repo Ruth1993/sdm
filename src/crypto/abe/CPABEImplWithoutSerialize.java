@@ -115,7 +115,7 @@ public class CPABEImplWithoutSerialize {
 		return JSON.toJSONString(json);
 	}
 
-	public static byte[] enc(String str, Policy p, PublicKey PK, String outputFileName) {
+	public static byte[] enc(String str, Policy p, PublicKey PK) {
 		Element m = PairingManager.defaultPairing.getGT().newRandomElement();
 		Element s = pairing.getZr().newElement().setToRandom();
 		fill_policy(p, s, PK);
@@ -305,6 +305,7 @@ public class CPABEImplWithoutSerialize {
 	public static void fill_policy(Policy p, Element e, PublicKey PK) {
 		int i;
 		int size = p.children == null ? 0 : p.children.length;
+		System.out.println(size);
 		Element r, t;
 		p.q = rand_poly(p.k - 1, e);
 		if (p.children == null || size == 0) {

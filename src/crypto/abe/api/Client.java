@@ -29,6 +29,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
 public class Client {
+	
 	private PublicKey PK;
 	private SecretKey SK;
 	private String[] attrs;
@@ -68,13 +69,13 @@ public class Client {
 		this.SK = SerializeUtils.constructFromByteArray(SecretKey.class, b);
 	}
 
-	public byte[] enc(String in, String policy, String outputFileName) {
+	public byte[] enc(String in, String policy) {
 		Parser parser = new Parser();
 		Policy p = parser.parse(policy);
-		return CPABEImplWithoutSerialize.enc(in, p, this.PK, outputFileName);
+		return CPABEImplWithoutSerialize.enc(in, p, this.PK);
 	}
 
-	public void dec(byte[] b) {
+	public String dec(byte[] b) {
 		DataInputStream dis = null;
 		dis = new DataInputStream(new ByteArrayInputStream(b));
 		Ciphertext ciphertext = SerializeUtils._unserialize(Ciphertext.class, dis);
@@ -86,7 +87,7 @@ public class Client {
 		}
 		Element m = CPABEImpl.dec(ciphertext, SK, PK);
 		AES.crypto(Cipher.DECRYPT_MODE, dis, os, m);
-		System.out.println(os.toString());
+		return os.toString();
 	}
 
 	public void serializePK(File f) {
