@@ -2,6 +2,8 @@ package cn.edu.pku.ss.crypto.abe.apiV2;
 
 import it.unisa.dia.gas.jpbc.Element;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.DataInputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -12,15 +14,15 @@ import java.io.OutputStream;
 
 import javax.crypto.Cipher;
 
-import crypto.abe.CPABEImpl;
-import crypto.abe.CPABEImplWithoutSerialize;
-import crypto.abe.Ciphertext;
-import crypto.abe.Parser;
-import crypto.abe.Policy;
-import crypto.abe.PublicKey;
-import crypto.abe.SecretKey;
-import crypto.abe.serialize.SerializeUtils;
-import crypto.aes.AES;
+import cn.edu.pku.ss.crypto.abe.CPABEImpl;
+import cn.edu.pku.ss.crypto.abe.CPABEImplWithoutSerialize;
+import cn.edu.pku.ss.crypto.abe.Ciphertext;
+import cn.edu.pku.ss.crypto.abe.Parser;
+import cn.edu.pku.ss.crypto.abe.Policy;
+import cn.edu.pku.ss.crypto.abe.PublicKey;
+import cn.edu.pku.ss.crypto.abe.SecretKey;
+import cn.edu.pku.ss.crypto.abe.serialize.SerializeUtils;
+import cn.edu.pku.ss.crypto.aes.AES;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -64,46 +66,42 @@ public class Client {
 		this.SK = SerializeUtils.constructFromByteArray(SecretKey.class, b);
 	}
 
-	public void enc(File in, String policy, String outputFileName){
+	public byte[] enc(String in, String policy, String outputFileName){
 		Parser parser = new Parser();
 		Policy p = parser.parse(policy);
-//		CPABEImplWithoutSerialize.enc(in, p, this.PK, outputFileName);
-		CPABEImplWithoutSerialize.enc("Sample plaintext", p, this.PK);
+		return CPABEImplWithoutSerialize.enc(in, p, this.PK, outputFileName);
 	}
 	
-	public void dec(File in){
-		String ciphertextFileName = null; 
+	public String dec(byte[] b){
+		//String ciphertextFileName = null; 
 		DataInputStream dis = null;
 		try {
-			ciphertextFileName = in.getCanonicalPath();
-			dis = new DataInputStream(new FileInputStream(in));
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
+			//ciphertextFileName = in.getCanonicalPath();
+			System.out.println("whats up");
+			dis = new DataInputStream(new ByteArrayInputStream(b));
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		Ciphertext ciphertext = SerializeUtils._unserialize(Ciphertext.class, dis);
 		
-		String output = null;
+		/*String output = null;
 		if(ciphertextFileName.endsWith(".cpabe")){
 			int end = ciphertextFileName.indexOf(".cpabe");
 			output = ciphertextFileName.substring(0, end);
 		}
 		else{
 			output = ciphertextFileName + ".out";
-		}
-		File outputFile = CPABEImpl.createNewFile(output);
-		OutputStream os = null;
+		}*/
+		//File outputFile = CPABEImpl.createNewFile(output);
+		ByteArrayOutputStream os = null;
 		try {
-			os =  new FileOutputStream(outputFile);
-		} catch (FileNotFoundException e) {
+			os = new ByteArrayOutputStream();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		Element m = CPABEImpl.dec(ciphertext, SK, PK);
-
-		if (m != null) {
-			AES.crypto(Cipher.DECRYPT_MODE, dis, os, m);
-		}
+		AES.crypto(Cipher.DECRYPT_MODE, dis, os, m);
+		return os.toString();
 	}
 	
 	public void serializePK(File f){

@@ -1,4 +1,4 @@
-package crypto.abe;
+package cn.edu.pku.ss.crypto.abe;
 
 //### This file created by BYACC 1.8(/Java extension  1.15)
 
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 //#line 21 "Parser.java"
 
 public class Parser {
-int kjl=0;
+
 	boolean yydebug; // do I want debug output?
 	int yynerrs; // number of errors so far
 	int yyerrflag; // was there an error?
@@ -380,12 +380,8 @@ int kjl=0;
 				}
 
 				yyn = yyrindex[yystate]; // reduce
-				//System.out.println(yyn != 0);
-				//System.out.println((yyn += yychar) >= 0);
-				//System.out.println(yyn <= YYTABLESIZE);
-				//System.out.println(yycheck[yyn] == yychar);
 				if ((yyn != 0) && (yyn += yychar) >= 0 && yyn <= YYTABLESIZE && yycheck[yyn] == yychar) { // we
-					System.out.println("touch"+ kjl++);																						// reduced!
+																											// reduced!
 					if (yydebug)
 						debug("reduce");
 					yyn = yytable[yyn];
@@ -590,7 +586,7 @@ int kjl=0;
 	// ###############################################################
 
 	public static void main(String[] args) {
-		String input = "kkk & ( 2 of ( abc , bcd , cde ) )";
+		String input = "(bd or (jh and kj)) and (kkk or kj) and ( a or ( lk and b ) )";
 		Parser parser = new Parser(true);
 		Policy p = parser.parse(input);
 		System.out.println(p.k);

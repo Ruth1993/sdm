@@ -1,4 +1,4 @@
-package crypto.abe.serialize;
+package cn.edu.pku.ss.crypto.abe.serialize;
 
 public interface SimpleSerializable {
 	static final byte ArrayMark       = '[';
