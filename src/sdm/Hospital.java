@@ -26,8 +26,11 @@ public class Hospital {
 		return name;
 	}
 
-	/**
-	public List<Doctor> getDoctors() {
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	/*public List<Doctor> getDoctors() {
 		// to be implemented
 		// sql query
 		return null;

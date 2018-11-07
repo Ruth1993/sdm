@@ -2,6 +2,8 @@ package cn.edu.pku.ss.crypto.abe.apiV2;
 
 import java.io.File;
 
+import crypto.abe.api.Server;
+
 public class Example {
 	
 	private static final String prefix = "test_output/apiv2Example/";
