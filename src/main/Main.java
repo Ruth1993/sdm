@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import cn.edu.pku.ss.crypto.abe.Parser;
+import cn.edu.pku.ss.crypto.abe.Policy;
 import cn.edu.pku.ss.crypto.abe.apiV2.Server;
 import databaseAccess.DBConnection;
 import sdm.*;
@@ -58,7 +60,7 @@ public class Main {
 		// TODO we need to change the input file to a String[] with the parameters for the query and outputFileName to a String[] with the encrypted parameters
 		String outputFileName = "test.cpabe";
 		File in = new File("README.md");
-		String policy = "Doctor OR HealthClub";
+		String policy = "(Student AND Teacher) OR (Student AND PhD)";
 		p1.enc(in, policy, outputFileName);
 		
 		//Ω‚√‹

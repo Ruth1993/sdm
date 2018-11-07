@@ -21,14 +21,14 @@ public class Policy implements SimpleSerializable {
 	// List<Policy> children; /* pointers to bswabe_policy_t's, len == 0 for
 	// leaves */
 	@Serializable
-	Policy[] children;
+	public Policy[] children;
 
 	/* only used during encryption */
 	transient Polynomial q;
 
 	/* only used during decryption */
-	transient int satisfiable;
-	transient int min_leaves;
-	transient int attri;
-	transient List<Integer> satl;
+	public transient int satisfiable;
+	public transient int min_leaves;
+	public transient int attri;
+	public transient List<Integer> satl;
 }

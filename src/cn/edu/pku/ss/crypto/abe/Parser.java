@@ -587,8 +587,9 @@ public class Parser {
 
 	public static void main(String[] args) {
 		String input = "kkk & ( 2 of ( abc , bcd , cde ) )";
+		String input2 = "(a or b) and ((c and d) or (k and s))";
 		Parser parser = new Parser(true);
-		Policy p = parser.parse(input);
+		Policy p = parser.parse(input2);
 		System.out.println(p.k);
 	}
 
