@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import crypto.abe.api.Client;
+import cn.edu.pku.ss.crypto.abe.apiV2.Client;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+
 import databaseAccess.DBConnection;
 
 public class Person extends Client {
@@ -25,8 +27,8 @@ public class Person extends Client {
 	public Person(int id, String name) {
 		this.id = id;
 		this.name = name;
-		//PRODUCE ERROR
-		defaultBIReadingPolicy = "( Company1 AND employer ) OR ( doctor ) OR ( nurse ) OR ( insuranceprovider AND insurance1 ) OR ( healthclub1 AND healthclubemployee ) OR "
+		// PRODUCE ERROR
+		defaultBIReadingPolicy = "( Company1 AND employer ) OR ( doctor ) OR ( nurse ) OR ( insuranceprovider AND insurance1 ) OR ( healthclub1 AND healthclubemployee ) OR id"
 				+ id;
 	}
 
@@ -116,13 +118,20 @@ public class Person extends Client {
 
 	public ArrayList<String> readBasicInfoDB(int uid) {
 		ArrayList<String> results = new ArrayList<String>();
+		byte[] bytes = null;
 		try {
 			Statement Statement = connection.createStatement();
 			ResultSet res = Statement.executeQuery("SELECT * FROM sdmproject.persons_basic_info WHERE id = " + uid);
-			res.first();
-			results.add(res.getString(1));
-			for (int i = 2; i <= 8; i++)
-				results.add(this.dec(res.getBytes(i)));
+			while (res.next()) {
+				//bytes = res.getBytes("name");
+				//results.add(this.dec(res.getBytes("name")));
+				results.add(res.getString(1));
+				for (int i = 2; i <= 8; i++) {
+					System.out.println(res.getBytes(i).toString());
+					System.out.println(this.dec(res.getBytes(i)));
+					results.add(this.dec(res.getBytes(i)));
+				}
+			}
 			res.close();
 			Statement.close();
 			return results;
@@ -133,31 +142,40 @@ public class Person extends Client {
 		return null;
 	}
 
+	public void insertBasicInfoDB(String name, String birth_date, String birth_place, String gender, String nationality,
+			String address, String phone_no) throws SQLException {
+		DBConnection
+				.update("INSERT INTO sdmproject.persons_basic_info (name, birth_date, birth_place, gender, nationality, address, phone_number) VALUES ('"
+						+ this.enc(name, defaultBIReadingPolicy, "") + "', '"
+						+ this.enc(birth_date, defaultBIReadingPolicy, "") + "', '"
+						+ this.enc(birth_place, defaultBIReadingPolicy, "") + "', '"
+						+ this.enc(gender, defaultBIReadingPolicy, "") + "', '"
+						+ this.enc(nationality, defaultBIReadingPolicy, "") + "', '"
+						+ this.enc(address, defaultBIReadingPolicy, "") + "', '"
+						+ this.enc(phone_no, defaultBIReadingPolicy, "") + "')");
+	}
+
 	public void updateBasicInfoDB(int uid, String name, String birth_date, String birth_place, String gender,
 			String nationality, String address, String phone_no) throws SQLException {
-		// TODO The values inserted into the database should be the encrypted
-		// values according to this person's policy
-		System.out.println(defaultBIReadingPolicy);
-		ResultSet res = DBConnection.query("SELECT * FROM sdmproject.persons_basic_info WHERE id = " + uid);
-		if (res.isClosed())
-			DBConnection
-					.update("INSERT INTO sdmproject.persons_basic_info (name, birth_date, birth_place, gender, nationality, address, phone_number) VALUES ('"
-							+ this.enc(name, defaultBIReadingPolicy) + "', '"
-							+ this.enc(birth_date, defaultBIReadingPolicy) + "', '"
-							+ this.enc(birth_place, defaultBIReadingPolicy) + "', '"
-							+ this.enc(gender, defaultBIReadingPolicy) + "', '"
-							+ this.enc(nationality, defaultBIReadingPolicy) + "', '"
-							+ this.enc(address, defaultBIReadingPolicy) + "', '"
-							+ this.enc(phone_no, defaultBIReadingPolicy) + "')");
-		else
-			DBConnection
-					.update("UPDATE sdmproject.persons_basic_info SET name='" + this.enc(name, defaultBIReadingPolicy)
-							+ "', birth_date='" + this.enc(birth_date, defaultBIReadingPolicy) + "', birth_place='"
-							+ this.enc(birth_place, defaultBIReadingPolicy) + "', gender='"
-							+ this.enc(gender, defaultBIReadingPolicy) + "', nationality='"
-							+ this.enc(nationality, defaultBIReadingPolicy) + "', address='"
-							+ this.enc(address, defaultBIReadingPolicy) + "', phone_number='"
-							+ this.enc(phone_no, defaultBIReadingPolicy) + "' WHERE id = " + uid);
+		Connection connection = DBConnection.getConnection();
+		PreparedStatement pstmt;
+		String sql = "UPDATE sdmproject.persons_basic_info SET name = ? , birth_date = ? , birth_place = ?, gender = ? , nationality = ? , address = ? , phone_number = ? WHERE id = ?";
+		try {
+			pstmt = connection.prepareStatement(sql);
+			pstmt.setBytes(1, this.enc(name, defaultBIReadingPolicy, ""));
+			pstmt.setBytes(2, this.enc(birth_date, defaultBIReadingPolicy, ""));
+			pstmt.setBytes(3, this.enc(birth_place, defaultBIReadingPolicy, ""));
+			pstmt.setBytes(4, this.enc(gender, defaultBIReadingPolicy, ""));
+			pstmt.setBytes(5, this.enc(nationality, defaultBIReadingPolicy, ""));
+			pstmt.setBytes(6, this.enc(address, defaultBIReadingPolicy, ""));
+			pstmt.setBytes(7, this.enc(phone_no, defaultBIReadingPolicy, ""));
+			pstmt.setInt(8, uid);
+			pstmt.executeUpdate();
+			pstmt.close();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public ArrayList<String> readBasicHealthInfoDB(int uid) {
@@ -166,9 +184,10 @@ public class Person extends Client {
 			Statement Statement = connection.createStatement();
 			ResultSet res = Statement
 					.executeQuery("SELECT * FROM sdmproject.patients_basic_health_info WHERE id_patient = " + uid);
-			res.first();
-			for (int i = 1; i <= 6; i++)
-				results.add(res.getString(i));
+			while (res.next()) {
+				for (int i = 1; i <= 6; i++)
+					results.add(res.getString(i));
+			}
 			res.close();
 			Statement.close();
 			return results;

@@ -1,4 +1,4 @@
-package crypto.abe.serialize;
+package cn.edu.pku.ss.crypto.abe.serialize;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

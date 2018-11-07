@@ -1,22 +1,27 @@
-package crypto.abe.api;
+package cn.edu.pku.ss.crypto.abe.apiV2;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-import crypto.abe.api.Client;
-import crypto.abe.api.Server;
 import databaseAccess.DBConnection;
 
 public class Example {
+
 	public static void main(String[] args) {
 		Server server = new Server();
 		Client PKUClient = new Client(new String[] { "PKU", "Student" });
 		Client THUClient = new Client(new String[] { "THU", "Student" });
-		Client TeacherClient = new Client(new String[] { "PKU", "Teacher" });
+		Client TeacherClient = new Client(new String[] { "writer", "Teacher" });
 		// client从server处获取公钥字符串
 		String MKJSONString = server.getMasterKeyInString();
 		System.out.println(MKJSONString);
@@ -49,12 +54,16 @@ public class Example {
 		SKJSONString = server.generateSecretKey(TeacherClient.getAttrs());
 		System.out.println(SKJSONString);
 		TeacherClient.setSK(
-				"{\"SK\":\"RQAAAIBGIaoB4rroXhgARstRFAO5Va9XuoNIovlZlOouXVpd5O0CRn8VT8RT47z/dS2jtvqfPB54w4YrWKFJhXTBDCHimjHzkMgVEJTL3nrNdzazcs7oGWXyEReoy9Rn96yohL1DERoLLADLVPtTa2vjEWFnK0a06cee6xhftPalC8G5zFsAAAACUwADUEtVRQAAAICjsTlhjr6Dr8gNv6BTsuFD9GUSxok4cGuFBYqfP88yFL00mdmkZVKjHhBJXCtjW2rhz/MHxomz3umF+jWgoRuyhkDbwk8IuSG5Q2TaFnUYlKXY9AdaskOeQtHqoUKuUrriv666qcacoPLbr7NKdURvcwT6ozPPLvDfymxq8dFzekUAAACAKhjvH1Seja+kYxz6bBiqoAnxjheGGguAZDHha/mtJMzlzOjmxOpHd3imj+vtXhKuGsa+odO0NIafHLT8T+Sh7yy0W0H+SnI3Ocr9q1vLxjVnn/QXxf67OCY9teep830tJ2ahAxDl+F6KsL/EwwCC1FDoVPdX62ALZNYhURfr5DpTAAdUZWFjaGVyRQAAAICjsTlhjr6Dr8gNv6BTsuFD9GUSxok4cGuFBYqfP88yFL00mdmkZVKjHhBJXCtjW2rhz/MHxomz3umF+jWgoRuyhkDbwk8IuSG5Q2TaFnUYlKXY9AdaskOeQtHqoUKuUrriv666qcacoPLbr7NKdURvcwT6ozPPLvDfymxq8dFzekUAAACAM2Fo8KZP/x2r/Xzm2rtvY5RTVGW8gogeXLibAaPEfCfCJE6NMMAs5phZqULaiTGrO1R4nVUafRmg6kHzo46iOGjgKrrD+NXkmV+0NHr3zk+S19yhZMH8J0QmQWJoh1Qn6vFWVV3vITw2ccv3qVswGGou3YkUn3Qvo4p8BbWttSY=\"}");
+				"{\"SK\":\"RQAAAICLVp2p1KbxyMWfwgFgpfESNNe3fE1x4HwVs0iJVdJijQHphajnkLTHQ4IhbMdH2i1NQ736yYAT39N5mj/MgdOMlFqDHRvri6wugmTv+Ee+UKdttA61NQhNcd2QLp6tknxsaU9tk9NeHHdTDKd8SLe6AWFDAoLAZ3esglOnu9Kj6FsAAAACUwAGd3JpdGVyRQAAAIBn9CKWqDXYDSsywZfec8qFo3SQlVG5q1/p0ReiZRZiJl+I4aBVKtRDfAPW7tfTD4regZqPpV+PwADwEMfkRUVzhw42j1rZsWcqpHWJc6jrpPx+z4FgJsh7Llv2rxNzIa6XMe4zlCk8Ky0FHGe/6ofOBDLsuiMV1N+iPvPU4zAW/0UAAACAiVnzQMaglTXCFDNHMyxCUCNAU6guoflID5yQKgGt46FJQgnhkddaw8BE4bYd55bXOseXUKIdcMmNJX36Gh1x3pqP4YXw3CdAyxu/gm5K+NDnp13WfdnD0bvSnRxOzMI5MzNPQ5MO8wQ2ORCeF/mSI8iHoloBmQ36wI2MKECIO/ZTAAdUZWFjaGVyRQAAAIBn9CKWqDXYDSsywZfec8qFo3SQlVG5q1/p0ReiZRZiJl+I4aBVKtRDfAPW7tfTD4regZqPpV+PwADwEMfkRUVzhw42j1rZsWcqpHWJc6jrpPx+z4FgJsh7Llv2rxNzIa6XMe4zlCk8Ky0FHGe/6ofOBDLsuiMV1N+iPvPU4zAW/0UAAACAdAhjdlz8t5EtJn8cBjLXKxq4TiQbLnhAO5HZDgG9vxaNqQ7dUr+4H+kwIrv1tUuPqU3+OUshSkCJpgXgDnWDHzywC0fG9SCgtTcMiY6kdTML+6VaC3XnXzMH28Y4FzEuAYagqgoMXXoLTR1MK7rs0qacFthVRVK4qyIALNw0dnk=\"}");
 
-		String policy = "Student OR Teacher";
-		byte[] b1 = PKUClient.enc("The implementation of Ciphertext Policy Attribute Based Encryption in Java.", policy);
+		// 加密
+		String outputFileName = "test.cpabe";
+		File in = new File("README.md");
+		String policy = "( reader AND PKU ) OR ( writer AND Teacher ) OR id1";
+		byte[] b1 = PKUClient.enc("esrdhtyj,nbvcderThe implementation of Ciphertext Policy Attribute Based Encryption in Java.", policy,
+				outputFileName);
 		System.out.println(b1);
-		Connection connection = DBConnection.getConnection();
+		/*Connection connection = DBConnection.getConnection();
 		String sql = "INSERT INTO testtable (ciphertext) VALUES(?)";
 		PreparedStatement pstmt;
 		byte[] bytes = null;
@@ -87,7 +96,9 @@ public class Example {
 		 * Auto-generated catch block e.printStackTrace(); } catch (IOException
 		 * e) { // TODO Auto-generated catch block e.printStackTrace(); }
 		 */
-		// THUClient.dec(in);
+		/*
 		TeacherClient.dec(bytes);
+		System.out.println();
+		THUClient.dec(bytes);*/
 	}
 }

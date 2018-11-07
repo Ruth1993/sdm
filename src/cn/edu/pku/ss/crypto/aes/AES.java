@@ -1,9 +1,10 @@
-package crypto.aes;
+package cn.edu.pku.ss.crypto.aes;
 
 import it.unisa.dia.gas.jpbc.Element;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,21 +19,40 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import crypto.abe.PairingManager;
+import cn.edu.pku.ss.crypto.abe.PairingManager;
 
 public class AES {
-
-	public static void crypto(int mode, InputStream is, OutputStream os, Element e) {
+	public static void main(String[] args) throws IOException {
+		File f = new File("README.md");
+		File enc_out = new File("enc_out");
+		if(!enc_out.exists()){
+			enc_out.createNewFile();
+		}
+		File dec_out = new File("dec_out");
+		if(!dec_out.exists()){
+			dec_out.createNewFile();
+		}
+		Element e = PairingManager.defaultPairing.getGT().newRandomElement();
+		InputStream is = new FileInputStream(f);
+		OutputStream os = new FileOutputStream(enc_out);
+		crypto(Cipher.ENCRYPT_MODE, is, os, e);
+		is.close();
+		os.close();
+		is = new FileInputStream(enc_out);
+		os = new FileOutputStream(dec_out);
+		crypto(Cipher.DECRYPT_MODE, is, os, e);
+	}
+	public static void crypto(int mode, InputStream is, OutputStream os, Element e){
 		try {
 			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 			SecretKey secKey = generateSecretKeyFromElement(e);
 			cipher.init(mode, secKey);
-
+			
 			CipherOutputStream cos = new CipherOutputStream(os, cipher);
 			byte[] block = new byte[8];
 			int i;
 			while ((i = is.read(block)) != -1) {
-				cos.write(block, 0, i);
+			    cos.write(block, 0, i);
 			}
 			cos.close();
 		} catch (NoSuchAlgorithmException e1) {

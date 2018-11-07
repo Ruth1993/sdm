@@ -1,4 +1,4 @@
-package crypto.abe;
+package cn.edu.pku.ss.crypto.abe;
 
 //#############################################
 //## file: Parser.java
