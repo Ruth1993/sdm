@@ -43,7 +43,7 @@ public class AES {
 		os = new FileOutputStream(dec_out);
 		crypto(Cipher.DECRYPT_MODE, is, os, e);
 	}
-	public static void crypto(int mode, InputStream is, OutputStream os, Element e){
+	public static void crypto(int mode, InputStream is, OutputStream os, Element e) {
 		try {
 			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
 			SecretKey secKey = generateSecretKeyFromElement(e);
@@ -57,19 +57,6 @@ public class AES {
 			}
 			
 			cos.close();
-			
-			
-			// Test
-			ByteArrayOutputStream bos2 = new ByteArrayOutputStream();
-			CipherOutputStream cos2 = new CipherOutputStream(bos2, cipher);
-			cos2.write("I am healthy.".getBytes());
-			cos2.flush();
-			cos2.close();
-			byte[] encrypted = bos2.toByteArray();
-			String test2 = encrypted.toString();
-			FileOutputStream fos2 = new FileOutputStream(new File("test2.cpabe"));
-			fos2.write(encrypted, 0, encrypted.length);
-			fos2.close();
 		} catch (NoSuchAlgorithmException e1) {
 			e1.printStackTrace();
 		} catch (NoSuchPaddingException e1) {
@@ -79,34 +66,6 @@ public class AES {
 		} catch (IOException e1) {
 			e1.printStackTrace();
 		}
-	}
-	public static String crypto_string(int mode, String plaintext, Element e){
-		String output = "";
-		
-		byte[] plaintext_bytes = plaintext.getBytes();
-		try {
-			Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
-			SecretKey secKey = generateSecretKeyFromElement(e);
-			cipher.init(mode, secKey);
-			
-			ByteArrayOutputStream bos = new ByteArrayOutputStream();
-			CipherOutputStream cos = new CipherOutputStream(bos, cipher);
-//			byte[] block = new byte[8];
-//			int i;
-//			while ((i = is.read(block)) != -1) {
-//			    cos.write(block, 0, i);
-//			}
-			cos.write(plaintext_bytes);
-			cos.flush();
-			cos.close();
-			
-			
-			byte[] encrypted = bos.toByteArray();			
-			output = encrypted.toString();			
-		} catch (Exception ex) {
-			ex.printStackTrace();
-		}
-		return output;
 	}
 
 	private static SecretKey generateSecretKeyFromElement(Element e) {

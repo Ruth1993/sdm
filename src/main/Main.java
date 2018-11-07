@@ -3,7 +3,11 @@ package main;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.Statement;
 
@@ -36,8 +40,8 @@ public class Main {
 		
 		// Test system
 		Server server = new Server(); // Initialize public and master key
-		Person p1 = new Person(1, "Alice", new String[]{"Patient"}); // create new persons with ID and roles
-		Person p2 = new Person(2, "Bob", new String[]{"Doctor"});
+		Person p1 = new Person(1, "Alice", new String[]{"Doctor"}); // create new persons with ID and roles
+		Person p2 = new Person(2, "Bob", new String[]{"Patient"});
 		
 		String policy = "Doctor OR HealthClub";
 		
@@ -54,21 +58,30 @@ public class Main {
 		p2.setSK(SKJSONString);
 		
 		
-		// TODO we need to change the input file to a String[] with the parameters for the query and 
-		// outputFileName to a String[] with the encrypted parameters
+//		// ENCRYPTION: file-based
 		String outputFileName = "test.cpabe";
 		File in = new File("README.md");
-		p1.enc(in, policy, outputFileName);
+		p1.enc(in, policy, outputFileName);		
 		
+		// ENCRYPTION: string-based
 		String plaintext = "I am healthy.";
-		String ciphertext = p1.enc_string(plaintext, policy);
-		System.out.println(ciphertext); //[B@1165b38
+		String ciphertext_p1 = p1.enc_string(plaintext, policy);
+		System.out.println(ciphertext_p1);
 		
-		//		
-		in = new File(outputFileName);
+//		// DECRYPTION: file-based
+//		File in = new File("test.cpabe");
 //		p1.dec(in);
-		String recovered = p2.dec_string(in, ciphertext);
-//		System.out.println(recovered);
+//		
+//		// DECRYPTION: string-based
+//		byte[] cipherbytes;
+//		try {
+//			cipherbytes = Files.readAllBytes(Paths.get(in.getAbsolutePath(), ""));
+//			String cipher_string = new String(cipherbytes);
+//			p1.dec_string(cipher_string);
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 	}
 
 }

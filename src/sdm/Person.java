@@ -7,6 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.file.Files;
 import java.util.Date;
 
 import javax.crypto.Cipher;
@@ -215,7 +216,7 @@ public class Person {
 	}
 	
 	//Change decryption function with mediator
-	public void dec(File in){
+	public void dec(File in) {
 		String ciphertextFileName = null; 
 		DataInputStream dis = null;
 		try {
@@ -247,12 +248,22 @@ public class Person {
 		AES.crypto(Cipher.DECRYPT_MODE, dis, os, m);
 	}
 	
-	public String dec_string(File in, String ciphertext_input) {
+	public String dec_string(String ciphertext_input) {
 		String plaintext_output = "";
 		
 		String ciphertextFileName = null; 
 		DataInputStream dis = null;
+		
+		File in = null;
 		try {
+			// Create temp file
+			in = File.createTempFile("cpabe_d_c_temp", ".tmp");
+			FileOutputStream fos = new FileOutputStream(in);
+			byte[] ciphertext_input_bytes = ciphertext_input.getBytes();
+			fos.write(ciphertext_input_bytes, 0, ciphertext_input_bytes.length);
+			fos.flush();
+			fos.close();
+			
 			ciphertextFileName = in.getCanonicalPath();
 			dis = new DataInputStream(new FileInputStream(in));
 		} catch (FileNotFoundException e) {
@@ -260,16 +271,9 @@ public class Person {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		Ciphertext ciphertext = SerializeUtils._unserialize_string(Ciphertext.class, dis, ciphertext_input);
+		Ciphertext ciphertext = SerializeUtils._unserialize(Ciphertext.class, dis);
 		
-		String output = null;
-		if(ciphertextFileName.endsWith(".cpabe")){
-			int end = ciphertextFileName.indexOf(".cpabe");
-			output = ciphertextFileName.substring(0, end);
-		}
-		else{
-			output = ciphertextFileName + ".out";
-		}
+		String output = "test123output";
 		File outputFile = CPABEImpl.createNewFile(output);
 		OutputStream os = null;
 		try {
@@ -280,6 +284,11 @@ public class Person {
 		Element m = CPABEImpl.dec(ciphertext, SK, PK);
 		if (m != null) {
 			AES.crypto(Cipher.DECRYPT_MODE, dis, os, m);
+		}
+		
+		// Cleanup of temp files
+		if (in != null) {
+			in.delete();
 		}
 		return plaintext_output;
 	}

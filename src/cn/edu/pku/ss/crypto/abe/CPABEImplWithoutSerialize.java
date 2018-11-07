@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -85,7 +87,7 @@ public class CPABEImplWithoutSerialize {
 		return JSON.toJSONString(json);
 	}
 	
-	public static void enc(File file, Policy p, PublicKey PK, String outputFileName){
+	public static void enc(File file, Policy p, PublicKey PK, String outputFileName) {
 		File ciphertextFile = createNewFile(outputFileName);
 		Element m = PairingManager.defaultPairing.getGT().newRandomElement();
 		Element s = pairing.getZr().newElement().setToRandom();
@@ -105,6 +107,9 @@ public class CPABEImplWithoutSerialize {
 			AES.crypto(Cipher.ENCRYPT_MODE, fis, fos, m);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}finally{
 			try {
 				fis.close();
@@ -115,9 +120,9 @@ public class CPABEImplWithoutSerialize {
 		}
 	}
 	
-	public static String enc_string(String input, Policy p, PublicKey PK){
-		String output = "";
-		
+	public static String enc_string(String plaintext, Policy p, PublicKey PK) {
+		String cipher_string = "";
+		File ciphertextTempFile = createNewTempFile(1);
 		Element m = PairingManager.defaultPairing.getGT().newRandomElement();
 		Element s = pairing.getZr().newElement().setToRandom();
 		fill_policy(p, s, PK);
@@ -127,9 +132,44 @@ public class CPABEImplWithoutSerialize {
 		ciphertext.Cs = m.duplicate().mul(PK.g_hat_alpha.duplicate().powZn(s));
 		ciphertext.C = PK.h.duplicate().powZn(s); 
 		
-		output = AES.crypto_string(Cipher.ENCRYPT_MODE, input, m);
 		
-		return output;
+		SerializeUtils.serialize(ciphertext, ciphertextTempFile);
+		
+		File plaintextTempFile = createNewTempFile(0);
+		byte[] plaintext_bytes = plaintext.getBytes();
+		
+		FileInputStream fis = null;
+		FileOutputStream fos = null;
+		try {
+			FileOutputStream temp_handler = new FileOutputStream(plaintextTempFile);
+			temp_handler.write(plaintext_bytes, 0, plaintext_bytes.length);
+			temp_handler.flush();
+			temp_handler.close();
+			
+			fis = new FileInputStream(plaintextTempFile);
+			fos = new FileOutputStream(ciphertextTempFile, true);
+			AES.crypto(Cipher.ENCRYPT_MODE, fis, fos, m);
+			
+			byte[] cipherbytes = Files.readAllBytes(Paths.get(ciphertextTempFile.getAbsolutePath(), ""));
+			cipher_string = new String(cipherbytes);
+			
+			if (ciphertextTempFile != null) {
+				ciphertextTempFile.delete();
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			try {
+				fis.close();
+				fos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return cipher_string;
 	}
 	
 	/**
@@ -190,13 +230,26 @@ public class CPABEImplWithoutSerialize {
 		else{
 			try {
 				String path = file.getCanonicalPath();
-				file.delete();
 				file = new File(path);
 				file.createNewFile();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+		return file;
+	}
+	
+	public static File createNewTempFile(int type){
+		File file = null;
+		String filename = "cpabe_e_c_temp";
+		if (type == 0) {
+			filename = "cpabe_e_p_temp";
+		}
+		try {
+			file = File.createTempFile(filename, ".tmp");
+		} catch (IOException e) {
+			e.printStackTrace();
+		}		
 		return file;
 	}
 	
