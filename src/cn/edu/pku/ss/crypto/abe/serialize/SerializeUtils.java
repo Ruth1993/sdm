@@ -31,7 +31,6 @@ public class SerializeUtils {
 					continue;
 				}
 				byte mark = dis.readByte();
-				System.out.println(mark);
 				// unserialize Element
 				if (field.getType() == Element.class) {
 					if (mark != SimpleSerializable.ElementMark) {

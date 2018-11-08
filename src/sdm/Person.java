@@ -21,34 +21,12 @@ public class Person extends Client {
 	private String[] attrs;
 	Connection connection = DBConnection.getConnection();
 
-	Policies policies;
+	public Policies policies;
 
 	public Person(int id, String name) {
 		this.id = id;
 		this.name = name;
 		policies = new Policies(id);
-	}
-
-	public static void main(String[] args) throws SQLException {
-		Person p1 = new Person(1, "Name 1");
-		// p1.updateBasicInfoDB(6, "Name", "Birth date", "Birth place",
-		// "Gender","Nationality", "Address","number");
-		// p1.updateBasicHealthInfoDB(3,
-		// "type3","weight3","height3","contact3","doctor3");
-		// p1.addMedicalVisitDB(2,"date1","date2","reason","results","hospital");
-		// p1.addMedicineDB("med","dos","dat1","dat6",3);
-		// p1.addHealthClubVisitsDB(2,"date","dur","reason","result","comment");
-		ArrayList<String> bi = p1.readBasicInfoDB(2);
-		ArrayList<String> bhi = p1.readBasicHealthInfoDB(2);
-		ArrayList<ArrayList<String>> mv = p1.readMedicalVisitDB(2);
-		ArrayList<ArrayList<String>> m = p1.readMedicineDB(2);
-		ArrayList<ArrayList<String>> hcv = p1.readHealthClubVisitDB(2);
-		System.out.println(bi.toString());
-		System.out.println(bhi.toString());
-		System.out.println(mv.toString());
-		System.out.println(m.toString());
-		System.out.println(hcv.toString());
-
 	}
 
 	public void getAttributeListDB() {
@@ -318,7 +296,7 @@ public class Person extends Client {
 			pstmt.setBytes(2, this.enc(dosage, policies.getMReadingPolicy(), ""));
 			pstmt.setBytes(3, this.enc(date_start, policies.getMReadingPolicy(), ""));
 			pstmt.setBytes(4, this.enc(date_end, policies.getMReadingPolicy(), ""));
-			pstmt.setInt(6, id_visit);
+			pstmt.setInt(5, id_visit);
 			pstmt.executeUpdate();
 			pstmt.close();
 		} catch (SQLException e) {
