@@ -255,27 +255,27 @@ public class Main {
 		 * p18.insertBasicHealthInfoDB(18,"A+","60","175","00850164392",15);
 		 */
 		/*
-		 * p1.addHealthClubVisitsDB(1,"2018/10/31","1 h","cardio","good","");
-		 * p2.addHealthClubVisitsDB(2,"2018/10/31","1 h","cardio","good","");
-		 * p3.addHealthClubVisitsDB(3,"2018/11/01","1 h 30 m","swimming","good",
+		 * p1.addHealthClubVisitsDB(1,1,"2018/10/31","1 h","cardio","good","");
+		 * p2.addHealthClubVisitsDB(2,2,"2018/10/31","1 h","cardio","good","");
+		 * p3.addHealthClubVisitsDB(3,3,"2018/11/01","1 h 30 m","swimming","good",
 		 * "");
-		 * p4.addHealthClubVisitsDB(4,"2018/11/01","1 h","treadmill","very good"
-		 * ,""); p5.addHealthClubVisitsDB(5,"2018/11/02","45 m","weight lifting"
+		 * p4.addHealthClubVisitsDB(4,4,"2018/11/01","1 h","treadmill","very good"
+		 * ,""); p5.addHealthClubVisitsDB(5,5,"2018/11/02","45 m","weight lifting"
 		 * ,"bad","hurt themselves during class");
-		 * p13.addHealthClubVisitsDB(13,"2018/11/02","1 h","squash","none","");
-		 * p14.addHealthClubVisitsDB(14,"2018/11/02","2 h","cycling","good","");
-		 * p15.addHealthClubVisitsDB(15,"2018/11/03","1 h","aerobics","good","")
-		 * ; p16.addHealthClubVisitsDB(16,"2018/11/03","1 h","sauna","good","");
-		 * p17.addHealthClubVisitsDB(17,"2018/11/04","1 h 45 m","boxing",
+		 * p13.addHealthClubVisitsDB(13,13,"2018/11/02","1 h","squash","none","");
+		 * p14.addHealthClubVisitsDB(14,14,"2018/11/02","2 h","cycling","good","");
+		 * p15.addHealthClubVisitsDB(15,15,"2018/11/03","1 h","aerobics","good","")
+		 * ; p16.addHealthClubVisitsDB(16,16,"2018/11/03","1 h","sauna","good","");
+		 * p17.addHealthClubVisitsDB(17,17,"2018/11/04","1 h 45 m","boxing",
 		 * "bad","hurt themselves during class");
-		 * p18.addHealthClubVisitsDB(18,"2018/11/05","1 h","cycling","none","");
-		 * p1.addHealthClubVisitsDB(1,"2018/11/06","2 h","cardio","none","");
-		 * p2.addHealthClubVisitsDB(2,"2018/11/08","2 h","weight lifting"
+		 * p18.addHealthClubVisitsDB(18,18,"2018/11/05","1 h","cycling","none","");
+		 * p1.addHealthClubVisitsDB(1,1,"2018/11/06","2 h","cardio","none","");
+		 * p2.addHealthClubVisitsDB(2,2,"2018/11/08","2 h","weight lifting"
 		 * ,"bad","hurt themselves during class");
-		 * p3.addHealthClubVisitsDB(3,"2018/11/08","2 h","boxing","good","");
-		 * p4.addHealthClubVisitsDB(4,"2018/11/08","1 h 45 m","swimming","good",
+		 * p3.addHealthClubVisitsDB(3,3,"2018/11/08","2 h","boxing","good","");
+		 * p4.addHealthClubVisitsDB(4,4,"2018/11/08","1 h 45 m","swimming","good",
 		 * "");
-		 * p5.addHealthClubVisitsDB(5,"2018/11/08","2 h","treadmills","good","")
+		 * p5.addHealthClubVisitsDB(5,5,"2018/11/08","2 h","treadmills","good","")
 		 * ;
 		 */
 		/*
@@ -314,15 +314,15 @@ public class Main {
 		 * "Lupus","starting; prescribed medicine",1);
 		 */
 		/*
-		 * p1.addMedicineDB("epinephrine", "when needed", "-", "-", 1);
-		 * p3.addMedicineDB("Ventolin HFA", "when needed", "-", "-", 3);
-		 * p4.addMedicineDB("Cream", "morning and night", "2018/11/01",
-		 * "2018/12/01", 4); p6.addMedicineDB("Cream", "morning and night",
-		 * "2018/11/01", "2018/12/01", 6); p2.addMedicineDB("Aspirin",
+		 * p1.addMedicineDB(1,"epinephrine", "when needed", "-", "-", 1);
+		 * p3.addMedicineDB(3,"Ventolin HFA", "when needed", "-", "-", 3);
+		 * p4.addMedicineDB(4,"Cream", "morning and night", "2018/11/01",
+		 * "2018/12/01", 4); p6.addMedicineDB(6,"Cream", "morning and night",
+		 * "2018/11/01", "2018/12/01", 6); p2.addMedicineDB(2,"Aspirin",
 		 * "max 4 a day", "2018/11/02", "2018/11/05", 8);
-		 * p3.addMedicineDB("Ibuprofen", "max 3 a day", "2018/11/03",
-		 * "2018/11/08", 9); p2.addMedicineDB("antibiotic", "every 12 hours",
-		 * "2018/11/03", "2018/11/10", 10); p1.addMedicineDB("Corticosteroids",
+		 * p3.addMedicineDB(3,"Ibuprofen", "max 3 a day", "2018/11/03",
+		 * "2018/11/08", 9); p2.addMedicineDB(2,"antibiotic", "every 12 hours",
+		 * "2018/11/03", "2018/11/10", 10); p1.addMedicineDB(1,"Corticosteroids",
 		 * "1 mg/kg/day", "2018/11/05", "2018/11/15", 11);
 		 */
 		

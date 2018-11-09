@@ -8,6 +8,9 @@ import java.util.Date;
 import java.util.List;
 
 import cn.edu.pku.ss.crypto.abe.apiV2.Client;
+import cn.edu.pku.ss.crypto.abe.Parser;
+import cn.edu.pku.ss.crypto.abe.Policy;
+import cn.edu.pku.ss.crypto.abe.CPABEImpl;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -27,6 +30,42 @@ public class Person extends Client {
 		this.id = id;
 		this.name = name;
 		policies = new Policies(id);
+	}
+
+	private boolean checkWritingPolicy(String tableName, int uid) {
+		Policies p;
+		if (this.id != uid) {
+			p = new Policies(uid);
+		} else {
+			p = this.policies;
+		}
+		String writingPolicy = "";
+		switch (tableName) {
+		case "BasicInfo":
+			writingPolicy = p.getBIWritingPolicy();
+			break;
+		case "BasicHealthInfo":
+			writingPolicy = p.getBHIWritingPolicy();
+			break;
+		case "MedicalVisit":
+			writingPolicy = p.getMVWritingPolicy();
+			break;
+		case "Medicine":
+			writingPolicy = p.getMWritingPolicy();
+			break;
+		case "HealthClubVisit":
+			writingPolicy = p.getHCVWritingPolicy();
+			break;
+		default:
+			break;
+		}
+		Parser parser = new Parser();
+		Policy pw = parser.parse(writingPolicy);
+		CPABEImpl.check_sat(this.getSK(), pw);
+		if (pw.satisfiable != 1)
+			return false;
+		else
+			return true;
 	}
 
 	public void getAttributeListDB() {
@@ -136,22 +175,24 @@ public class Person extends Client {
 	public void updateBasicInfoDB(int uid, String name, String birth_date, String birth_place, String gender,
 			String nationality, String address, String phone_no) throws SQLException {
 		// Connection connection = DBConnection.getConnection();
-		PreparedStatement pstmt;
-		String sql = "UPDATE sdmproject.persons_basic_info SET name = ? , birth_date = ? , birth_place = ?, gender = ? , nationality = ? , address = ? , phone_number = ? WHERE id = ?";
-		try {
-			pstmt = connection.prepareStatement(sql);
-			pstmt.setString(1, name);
-			pstmt.setBytes(2, this.enc(birth_date, policies.getBIReadingPolicy(), ""));
-			pstmt.setBytes(3, this.enc(birth_place, policies.getBIReadingPolicy(), ""));
-			pstmt.setBytes(4, this.enc(gender, policies.getBIReadingPolicy(), ""));
-			pstmt.setBytes(5, this.enc(nationality, policies.getBIReadingPolicy(), ""));
-			pstmt.setBytes(6, this.enc(address, policies.getBIReadingPolicy(), ""));
-			pstmt.setBytes(7, this.enc(phone_no, policies.getBIReadingPolicy(), ""));
-			pstmt.setInt(8, uid);
-			pstmt.executeUpdate();
-			pstmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (checkWritingPolicy("BasicInfo", uid)) {
+			PreparedStatement pstmt;
+			String sql = "UPDATE sdmproject.persons_basic_info SET name = ? , birth_date = ? , birth_place = ?, gender = ? , nationality = ? , address = ? , phone_number = ? WHERE id = ?";
+			try {
+				pstmt = connection.prepareStatement(sql);
+				pstmt.setString(1, name);
+				pstmt.setBytes(2, this.enc(birth_date, policies.getBIReadingPolicy(), ""));
+				pstmt.setBytes(3, this.enc(birth_place, policies.getBIReadingPolicy(), ""));
+				pstmt.setBytes(4, this.enc(gender, policies.getBIReadingPolicy(), ""));
+				pstmt.setBytes(5, this.enc(nationality, policies.getBIReadingPolicy(), ""));
+				pstmt.setBytes(6, this.enc(address, policies.getBIReadingPolicy(), ""));
+				pstmt.setBytes(7, this.enc(phone_no, policies.getBIReadingPolicy(), ""));
+				pstmt.setInt(8, uid);
+				pstmt.executeUpdate();
+				pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -199,22 +240,23 @@ public class Person extends Client {
 
 	public void updateBasicHealthInfoDB(int uid, String blood_type, String weight, String height,
 			String emergency_contact, int id_family_doctor) throws SQLException {
-		PreparedStatement pstmt;
-		String sql = "UPDATE sdmproject.patients_basic_health_info SET blood_type = ? , weight = ? , height = ? , emergency_contact = ? , id_family_doctor = ? WHERE id_patient = ? ";
-		try {
-			pstmt = connection.prepareStatement(sql);
-			pstmt.setBytes(1, this.enc(blood_type, policies.getBHIReadingPolicy(), ""));
-			pstmt.setBytes(2, this.enc(weight, policies.getBHIReadingPolicy(), ""));
-			pstmt.setBytes(3, this.enc(height, policies.getBHIReadingPolicy(), ""));
-			pstmt.setBytes(4, this.enc(emergency_contact, policies.getBHIReadingPolicy(), ""));
-			pstmt.setInt(5, id_family_doctor);
-			pstmt.setInt(6, uid);
-			pstmt.executeUpdate();
-			pstmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (checkWritingPolicy("BasicHealthInfo", uid)) {
+			PreparedStatement pstmt;
+			String sql = "UPDATE sdmproject.patients_basic_health_info SET blood_type = ? , weight = ? , height = ? , emergency_contact = ? , id_family_doctor = ? WHERE id_patient = ? ";
+			try {
+				pstmt = connection.prepareStatement(sql);
+				pstmt.setBytes(1, this.enc(blood_type, policies.getBHIReadingPolicy(), ""));
+				pstmt.setBytes(2, this.enc(weight, policies.getBHIReadingPolicy(), ""));
+				pstmt.setBytes(3, this.enc(height, policies.getBHIReadingPolicy(), ""));
+				pstmt.setBytes(4, this.enc(emergency_contact, policies.getBHIReadingPolicy(), ""));
+				pstmt.setInt(5, id_family_doctor);
+				pstmt.setInt(6, uid);
+				pstmt.executeUpdate();
+				pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-
 	}
 
 	public ArrayList<ArrayList<String>> readMedicalVisitDB(int uid) {
@@ -244,21 +286,22 @@ public class Person extends Client {
 
 	public void addMedicalVisitDB(int uid, String date_start, String date_end, String reason, String results,
 			int id_hospital_doctors) {
-
-		PreparedStatement pstmt;
-		String sql = "INSERT INTO sdmproject.patients_visits (id_patient, date_start, date_end, reason, results, id_hospital_doctors) VALUES ( ? , ? , ? , ? , ? , ? ) ";
-		try {
-			pstmt = connection.prepareStatement(sql);
-			pstmt.setInt(1, uid);
-			pstmt.setBytes(2, this.enc(date_start, policies.getMVReadingPolicy(), ""));
-			pstmt.setBytes(3, this.enc(date_end, policies.getMVReadingPolicy(), ""));
-			pstmt.setBytes(4, this.enc(reason, policies.getMVReadingPolicy(), ""));
-			pstmt.setBytes(5, this.enc(results, policies.getMVReadingPolicy(), ""));
-			pstmt.setInt(6, id_hospital_doctors);
-			pstmt.executeUpdate();
-			pstmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (checkWritingPolicy("MedicalVisit", uid)) {
+			PreparedStatement pstmt;
+			String sql = "INSERT INTO sdmproject.patients_visits (id_patient, date_start, date_end, reason, results, id_hospital_doctors) VALUES ( ? , ? , ? , ? , ? , ? ) ";
+			try {
+				pstmt = connection.prepareStatement(sql);
+				pstmt.setInt(1, uid);
+				pstmt.setBytes(2, this.enc(date_start, policies.getMVReadingPolicy(), ""));
+				pstmt.setBytes(3, this.enc(date_end, policies.getMVReadingPolicy(), ""));
+				pstmt.setBytes(4, this.enc(reason, policies.getMVReadingPolicy(), ""));
+				pstmt.setBytes(5, this.enc(results, policies.getMVReadingPolicy(), ""));
+				pstmt.setInt(6, id_hospital_doctors);
+				pstmt.executeUpdate();
+				pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -286,21 +329,23 @@ public class Person extends Client {
 		return null;
 	}
 
-	public void addMedicineDB(String medicine_name, String dosage, String date_start, String date_end, int id_visit) {
-
-		PreparedStatement pstmt;
-		String sql = "INSERT INTO sdmproject.patients_medicines (medicine_name, dosage, date_start, date_end, id_visit) VALUES ( ? , ? , ? , ? , ? ) ";
-		try {
-			pstmt = connection.prepareStatement(sql);
-			pstmt.setBytes(1, this.enc(medicine_name, policies.getMReadingPolicy(), ""));
-			pstmt.setBytes(2, this.enc(dosage, policies.getMReadingPolicy(), ""));
-			pstmt.setBytes(3, this.enc(date_start, policies.getMReadingPolicy(), ""));
-			pstmt.setBytes(4, this.enc(date_end, policies.getMReadingPolicy(), ""));
-			pstmt.setInt(5, id_visit);
-			pstmt.executeUpdate();
-			pstmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+	public void addMedicineDB(int uid, String medicine_name, String dosage, String date_start, String date_end,
+			int id_visit) {
+		if (checkWritingPolicy("Medicine", uid)) {
+			PreparedStatement pstmt;
+			String sql = "INSERT INTO sdmproject.patients_medicines (medicine_name, dosage, date_start, date_end, id_visit) VALUES ( ? , ? , ? , ? , ? ) ";
+			try {
+				pstmt = connection.prepareStatement(sql);
+				pstmt.setBytes(1, this.enc(medicine_name, policies.getMReadingPolicy(), ""));
+				pstmt.setBytes(2, this.enc(dosage, policies.getMReadingPolicy(), ""));
+				pstmt.setBytes(3, this.enc(date_start, policies.getMReadingPolicy(), ""));
+				pstmt.setBytes(4, this.enc(date_end, policies.getMReadingPolicy(), ""));
+				pstmt.setInt(5, id_visit);
+				pstmt.executeUpdate();
+				pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -328,23 +373,24 @@ public class Person extends Client {
 		return null;
 	}
 
-	public void addHealthClubVisitsDB(int id_patient_healthclub, String date, String duration, String reasons,
+	public void addHealthClubVisitsDB(int uid, int id_patient_healthclub, String date, String duration, String reasons,
 			String results, String comments) {
-
-		PreparedStatement pstmt;
-		String sql = "INSERT INTO sdmproject.patients_health_clubs_visits (id_patient_healthclub, date, duration, reasons, results, comments) VALUES ( ? , ? , ? , ? , ? , ? ) ";
-		try {
-			pstmt = connection.prepareStatement(sql);
-			pstmt.setInt(1, id_patient_healthclub);
-			pstmt.setBytes(2, this.enc(date, policies.getHCVReadingPolicy(), ""));
-			pstmt.setBytes(3, this.enc(duration, policies.getHCVReadingPolicy(), ""));
-			pstmt.setBytes(4, this.enc(reasons, policies.getHCVReadingPolicy(), ""));
-			pstmt.setBytes(5, this.enc(results, policies.getHCVReadingPolicy(), ""));
-			pstmt.setBytes(6, this.enc(comments, policies.getHCVReadingPolicy(), ""));
-			pstmt.executeUpdate();
-			pstmt.close();
-		} catch (SQLException e) {
-			e.printStackTrace();
+		if (checkWritingPolicy("HealthClubVisit", uid)) {
+			PreparedStatement pstmt;
+			String sql = "INSERT INTO sdmproject.patients_health_clubs_visits (id_patient_healthclub, date, duration, reasons, results, comments) VALUES ( ? , ? , ? , ? , ? , ? ) ";
+			try {
+				pstmt = connection.prepareStatement(sql);
+				pstmt.setInt(1, id_patient_healthclub);
+				pstmt.setBytes(2, this.enc(date, policies.getHCVReadingPolicy(), ""));
+				pstmt.setBytes(3, this.enc(duration, policies.getHCVReadingPolicy(), ""));
+				pstmt.setBytes(4, this.enc(reasons, policies.getHCVReadingPolicy(), ""));
+				pstmt.setBytes(5, this.enc(results, policies.getHCVReadingPolicy(), ""));
+				pstmt.setBytes(6, this.enc(comments, policies.getHCVReadingPolicy(), ""));
+				pstmt.executeUpdate();
+				pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
