@@ -1,11 +1,23 @@
 package gui;
 
 import java.awt.*; 
-import java.awt.event.*; 
+import java.awt.event.*;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 import javax.swing.*;
 
+import databaseAccess.DBConnection;
+import sdm.Person;
+
 public class GUI extends JFrame implements ActionListener {
-	  private JPanel start_panel = new JPanel(new FlowLayout());
+	  private Connection connection;
+	  
+	  private Person p;
+	  
+	  private JPanel start_panel;
 	  
 	  private JLabel start_title = new JLabel("Start screen");
 	  private JLabel start_label = new JLabel("Please insert your identity below");
@@ -23,6 +35,14 @@ public class GUI extends JFrame implements ActionListener {
 	  
 	  public GUI() {
 	    super("PHR system interface - start screen"); 
+	    
+		// Test DB connection
+		connection = DBConnection.getConnection();
+		
+	    this.p = new Person(7, "Donald Trump", new String[]{"Doctor"});
+		
+		start_panel = new JPanel();
+		start_panel.setLayout(new BoxLayout(start_panel, BoxLayout.Y_AXIS));
 
 	    pack();
 	    setLocationRelativeTo(null); 
@@ -58,8 +78,8 @@ public class GUI extends JFrame implements ActionListener {
 	    Object source = event.getSource();
 	    
 	    if(source == this.start_submit) {
-	      if(this.start_insert_id.getText().equals("Doctor")) {
-	    	  new DoctorWindow().setVisible(true);
+	      if(this.start_insert_id.getText().equals("Doctor") || this.start_insert_id.getText().equals("d")) {
+	    	  new DoctorWindow(this.connection, this.p).setVisible(true);
 	    	  this.dispose();
 	      } else if(this.start_insert_id.getText().equals("Patient")) {
 	    	  new PatientWindow().setVisible(true);
@@ -74,7 +94,11 @@ public class GUI extends JFrame implements ActionListener {
 	    }
 	  }
 	  
-	  public static void main(String args[]) {
+	  public Connection getConnection() {
+		  return this.connection;
+	  }
+	  
+	  public static void main(String args[]) {	  
 		  new GUI();
 	  }
 }

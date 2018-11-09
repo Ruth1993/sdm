@@ -169,7 +169,7 @@ public class Person {
 	}
 	
 	/**
-	 * Insert entry in insertVisitationDB table
+	 * Insert entry in insertVisitDB table
 	 * @param id_patient
 	 * @param date_start
 	 * @param date_end
@@ -177,7 +177,7 @@ public class Person {
 	 * @param results
 	 * @param id_hospitals_doctors
 	 */
-	public void insertVisitationDB(int id_patient, Date date_start, Date date_end, String reason, String results, int id_hospitals_doctors) {
+	public void insertVisitDB(int id_patient, String date_start, String date_end, String reason, String results, String id_hospitals_doctors) {
 		//to be implemented
 		//sql query
 	}
@@ -190,7 +190,21 @@ public class Person {
 	 * @param date_end
 	 * @param id_visit
 	 */
-	public void insertMedicineDB(String medicine_name, String dosage, Date date_start, Date date_end, int id_visit) {
+	public void insertMedicineDB(String medicine_name, String dosage, String date_start, String date_end, int id_visit) {
+		//to be implemented
+		//sql query
+	}
+	
+	/**
+	 * Insert patient into table patients_basic_health_info
+	 * @param id
+	 * @param blood_type
+	 * @param weight
+	 * @param height
+	 * @param emergency_contact
+	 * @param id_family_doctor
+	 */
+	public void insertPatientDB(int id, String blood_type, String weight, String height, String emergency_contact, String id_family_doctor) {
 		//to be implemented
 		//sql query
 	}
