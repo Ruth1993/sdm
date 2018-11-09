@@ -1,4 +1,4 @@
-package cn.edu.pku.ss.crypto.aes;
+package crypto.aes;
 
 import it.unisa.dia.gas.jpbc.Element;
 
@@ -19,7 +19,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
-import cn.edu.pku.ss.crypto.abe.PairingManager;
+import crypto.abe.PairingManager;
 
 public class AES {
 	public static void main(String[] args) throws IOException {

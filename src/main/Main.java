@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import cn.edu.pku.ss.crypto.abe.apiV2.Server;
+import crypto.abe.api.Server;
 import databaseAccess.DBConnection;
 import sdm.*;
 
@@ -335,8 +335,8 @@ public class Main {
 
 		// p1.updateBasicInfoDB(2, "Name", "Birth date", "Birth place",
 		// "Gender","Nationality", "Address","number");
-		// ArrayList<String> bi = p1.readBasicInfoDB(2);
-		// System.out.println(bi.toString());
+		 ArrayList<String> bi = p1.readBasicInfoDB(2);
+		 System.out.println(bi.toString());
 		//System.out.println(p1.getAttrs()[0]+p1.getAttrs()[1]+p1.getAttrs()[2]);
 		//p1.getAttributeListDB();
 		//System.out.println(p1.getAttrs()[0]+p1.getAttrs()[1]+p1.getAttrs()[2]);

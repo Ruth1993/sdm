@@ -1,4 +1,4 @@
-package cn.edu.pku.ss.crypto.abe;
+package crypto.abe;
 
 //### This file created by BYACC 1.8(/Java extension  1.15)
 

@@ -1,4 +1,4 @@
-package cn.edu.pku.ss.crypto.abe;
+package crypto.abe;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -17,8 +17,8 @@ import java.util.List;
 
 import javax.crypto.Cipher;
 
-import cn.edu.pku.ss.crypto.abe.serialize.SerializeUtils;
-import cn.edu.pku.ss.crypto.aes.AES;
+import crypto.abe.serialize.SerializeUtils;
+import crypto.aes.AES;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

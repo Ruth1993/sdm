@@ -1,4 +1,4 @@
-package cn.edu.pku.ss.crypto.abe.serialize;
+package crypto.abe.serialize;
 
 import it.unisa.dia.gas.jpbc.Element;
 
@@ -14,9 +14,9 @@ import java.io.OutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-import cn.edu.pku.ss.crypto.abe.PairingManager;
-import cn.edu.pku.ss.crypto.abe.Policy;
-import cn.edu.pku.ss.crypto.abe.SecretKey.SKComponent;
+import crypto.abe.PairingManager;
+import crypto.abe.Policy;
+import crypto.abe.SecretKey.SKComponent;
 
 public class SerializeUtils {
 	public static <T extends SimpleSerializable> T _unserialize(

@@ -1,4 +1,4 @@
-package cn.edu.pku.ss.crypto.abe;
+package crypto.abe;
 
 import it.unisa.dia.gas.jpbc.Pairing;
 import it.unisa.dia.gas.plaf.jpbc.pairing.PairingFactory;

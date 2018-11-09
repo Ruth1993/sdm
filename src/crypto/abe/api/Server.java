@@ -1,7 +1,7 @@
-package cn.edu.pku.ss.crypto.abe.apiV2;
+package crypto.abe.api;
 
-import cn.edu.pku.ss.crypto.abe.CPABEImplWithoutSerialize;
-import cn.edu.pku.ss.crypto.abe.CPABEImplWithoutSerialize.KeyPair;
+import crypto.abe.CPABEImplWithoutSerialize;
+import crypto.abe.CPABEImplWithoutSerialize.KeyPair;
 
 
 public class Server {

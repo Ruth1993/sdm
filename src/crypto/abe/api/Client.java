@@ -1,4 +1,4 @@
-package cn.edu.pku.ss.crypto.abe.apiV2;
+package crypto.abe.api;
 
 import it.unisa.dia.gas.jpbc.Element;
 
@@ -14,15 +14,15 @@ import java.io.OutputStream;
 
 import javax.crypto.Cipher;
 
-import cn.edu.pku.ss.crypto.abe.CPABEImpl;
-import cn.edu.pku.ss.crypto.abe.CPABEImplWithoutSerialize;
-import cn.edu.pku.ss.crypto.abe.Ciphertext;
-import cn.edu.pku.ss.crypto.abe.Parser;
-import cn.edu.pku.ss.crypto.abe.Policy;
-import cn.edu.pku.ss.crypto.abe.PublicKey;
-import cn.edu.pku.ss.crypto.abe.SecretKey;
-import cn.edu.pku.ss.crypto.abe.serialize.SerializeUtils;
-import cn.edu.pku.ss.crypto.aes.AES;
+import crypto.abe.CPABEImpl;
+import crypto.abe.CPABEImplWithoutSerialize;
+import crypto.abe.Ciphertext;
+import crypto.abe.Parser;
+import crypto.abe.Policy;
+import crypto.abe.PublicKey;
+import crypto.abe.SecretKey;
+import crypto.abe.serialize.SerializeUtils;
+import crypto.aes.AES;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -100,6 +100,8 @@ public class Client {
 			e.printStackTrace();
 		}
 		Element m = CPABEImpl.dec(ciphertext, SK, PK);
+		if(m == null)
+			return "You don't have the right to read this field.";
 		AES.crypto(Cipher.DECRYPT_MODE, dis, os, m);
 		return os.toString();
 	}

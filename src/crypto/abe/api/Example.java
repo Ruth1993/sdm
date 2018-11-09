@@ -1,4 +1,4 @@
-package cn.edu.pku.ss.crypto.abe.apiV2;
+package crypto.abe.api;
 
 import java.io.File;
 import java.io.FileInputStream;

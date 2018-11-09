@@ -7,10 +7,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import cn.edu.pku.ss.crypto.abe.apiV2.Client;
-import cn.edu.pku.ss.crypto.abe.Parser;
-import cn.edu.pku.ss.crypto.abe.Policy;
-import cn.edu.pku.ss.crypto.abe.CPABEImpl;
+import crypto.abe.CPABEImpl;
+import crypto.abe.Parser;
+import crypto.abe.Policy;
+import crypto.abe.api.Client;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

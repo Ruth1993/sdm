@@ -1,4 +1,4 @@
-package cn.edu.pku.ss.crypto.abe;
+package crypto.abe;
 
 import it.unisa.dia.gas.jpbc.Element;
 import it.unisa.dia.gas.jpbc.Pairing;
@@ -15,8 +15,8 @@ import java.util.List;
 
 import javax.crypto.Cipher;
 
-import cn.edu.pku.ss.crypto.abe.serialize.SerializeUtils;
-import cn.edu.pku.ss.crypto.aes.AES;
+import crypto.abe.serialize.SerializeUtils;
+import crypto.aes.AES;
 
 public class CPABEImpl {
 	private static Pairing pairing = PairingManager.defaultPairing;
@@ -143,7 +143,7 @@ public class CPABEImpl {
 	public static Element dec(Ciphertext ciphertext, SecretKey SK, PublicKey PK){
 		check_sat(SK, ciphertext.p);
 		if(ciphertext.p.satisfiable != 1){
-			System.err.println("SK does not satisfies the policy!");
+			System.out.println("SK does not satisfies the policy!");
 			return null;
 		}
 		pick_sat_min_leaves(ciphertext.p, SK);

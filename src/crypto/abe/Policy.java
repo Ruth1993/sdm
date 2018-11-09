@@ -1,12 +1,12 @@
-package cn.edu.pku.ss.crypto.abe;
+package crypto.abe;
 
 import it.unisa.dia.gas.jpbc.Element;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.edu.pku.ss.crypto.abe.serialize.Serializable;
-import cn.edu.pku.ss.crypto.abe.serialize.SimpleSerializable;
+import crypto.abe.serialize.Serializable;
+import crypto.abe.serialize.SimpleSerializable;
 
 public class Policy implements SimpleSerializable{
 	/* serialized */
