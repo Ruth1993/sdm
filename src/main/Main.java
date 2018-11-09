@@ -44,6 +44,8 @@ public class Main {
 		Server server = new Server();
 		Person p1 = new Person(1, "Alice", new String[]{"Patient"});
 		Person p2 = new Person(2, "Bob", new String[]{"Doctor"});
+		p1.startGUI(connection);
+		
 		
 		//client从server处获取公钥字符串
 		String PKJSONString = server.getPublicKeyInString();

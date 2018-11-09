@@ -14,6 +14,9 @@ import javax.crypto.Cipher;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+import java.sql.Connection;
+import databaseAccess.DBConnection;
+
 import cn.edu.pku.ss.crypto.abe.CPABEImpl;
 import cn.edu.pku.ss.crypto.abe.CPABEImplWithoutSerialize;
 import cn.edu.pku.ss.crypto.abe.Ciphertext;
@@ -24,6 +27,7 @@ import cn.edu.pku.ss.crypto.abe.SecretKey;
 import cn.edu.pku.ss.crypto.abe.serialize.SerializeUtils;
 import cn.edu.pku.ss.crypto.aes.AES;
 import databaseAccess.DBConnection;
+import gui.GUI;
 import it.unisa.dia.gas.jpbc.Element;
 
 public class Person {
@@ -207,6 +211,10 @@ public class Person {
 	public void insertPatientDB(int id, String blood_type, String weight, String height, String emergency_contact, String id_family_doctor) {
 		//to be implemented
 		//sql query
+	}
+	
+	public void startGUI(Connection connection) {
+		new GUI(connection, this);
 	}
 
 	//file in should be changed to the plaintext parameters for the input query
