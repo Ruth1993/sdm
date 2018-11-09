@@ -255,7 +255,7 @@ public class CPABEImpl {
 		
 	}
 	
-	private static void check_sat(SecretKey SK, Policy p){
+	public static void check_sat(SecretKey SK, Policy p){
 		int i,l;
 		int size = p.children == null ? 0 : p.children.length;
 		p.satisfiable = 0;

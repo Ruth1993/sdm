@@ -26,7 +26,7 @@ public class Policy implements SimpleSerializable{
 	transient Polynomial q;
 
 	/* only used during decryption */
-	transient int satisfiable;
+	public transient int satisfiable;
 	transient int min_leaves;
 	transient int attri;
 	transient List<Integer> satl;
