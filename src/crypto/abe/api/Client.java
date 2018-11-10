@@ -77,7 +77,6 @@ public class Client {
 		DataInputStream dis = null;
 		try {
 			//ciphertextFileName = in.getCanonicalPath();
-			System.out.println("whats up");
 			dis = new DataInputStream(new ByteArrayInputStream(b));
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -4,6 +4,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -74,13 +75,17 @@ public class Person extends Client {
 
 	public void getAttributeListDB() {
 		ArrayList<String> attributs = new ArrayList<String>();
-		attributs.add(((Integer) id).toString());
+		String year = "year"+Calendar.getInstance().get(Calendar.YEAR);
+		attributs.add(year);
+		attributs.add("id"+ id);
 		try {
 			Statement Statement = connection.createStatement();
 			ResultSet res = Statement.executeQuery("SELECT * FROM sdmproject.employments WHERE id_person = " + id);
 			while (res.next()) {
-				if (!attributs.contains(res.getString("type_job")))
+				if (!attributs.contains(res.getString("type_job"))){
 					attributs.add(res.getString("type_job"));
+					attributs.add(res.getString("type_company"));
+				}
 				switch (res.getString("type_company")) {
 				case "hospital":
 					Statement Statementhos = connection.createStatement();
@@ -124,10 +129,9 @@ public class Person extends Client {
 			}
 			res.close();
 			Statement.close();
-			attrs = new String[attributs.size()];
-			for (int i = 0; i < attrs.length; i++) {
-				attrs[i] = attributs.get(i);
-			}
+			this.attrs = new String[attributs.size()];
+			this.attrs = attributs.toArray(attrs);
+			this.setAttrs(this.attrs);
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -141,8 +145,8 @@ public class Person extends Client {
 			while (res.next()) {
 				results.add(res.getString(1));
 				for (int i = 2; i <= 8; i++) {
-					System.out.println(res.getBytes(i).toString());
-					System.out.println(this.dec(res.getBytes(i)));
+					System.out.println(res.getBytes(i));
+					System.out.println(i);
 					results.add(this.dec(res.getBytes(i)));
 				}
 			}
@@ -183,7 +187,6 @@ public class Person extends Client {
 			String sql = "UPDATE sdmproject.persons_basic_info SET name = ? , birth_date = ? , birth_place = ?, gender = ? , nationality = ? , address = ? , phone_number = ? WHERE id = ?";
 			try {
 				pstmt = connection.prepareStatement(sql);
-				System.out.println(policies.getBIReadingPolicy());
 				pstmt.setBytes(1, this.enc(name, policies.getBIReadingPolicy(), ""));
 				pstmt.setBytes(2, this.enc(birth_date, policies.getBIReadingPolicy(), ""));
 				pstmt.setBytes(3, this.enc(birth_place, policies.getBIReadingPolicy(), ""));
@@ -301,7 +304,7 @@ public class Person extends Client {
 				pstmt.setBytes(4, this.enc(reason, policies.getMVReadingPolicy(), ""));
 				pstmt.setBytes(5, this.enc(results, policies.getMVReadingPolicy(), ""));
 				pstmt.setInt(6, id_hospital_doctors);
-				pstmt.setInt(6, visitid);
+				pstmt.setInt(7, visitid);
 				pstmt.executeUpdate();
 				pstmt.close();
 			} catch (SQLException e) {
@@ -344,7 +347,7 @@ public class Person extends Client {
 				for (int i = 2; i <= 5; i++) {
 					subresults.add(this.dec(res.getBytes(i)));
 				}
-				subresults.add(res.getString(5));
+				subresults.add(res.getString(6));
 				results.add(subresults);
 			}
 			res.close();
@@ -356,8 +359,8 @@ public class Person extends Client {
 		return null;
 	}
 
-	public void updateMedicineDB(int rowid, int uid, String medicine_name, String dosage, String date_start, String date_end,
-			int id_visit) {
+	public void updateMedicineDB(int rowid, int uid, String medicine_name, String dosage, String date_start,
+			String date_end, int id_visit) {
 		if (checkWritingPolicy("Medicine", uid)) {
 			PreparedStatement pstmt;
 			String sql = "UPDATE patients_medicines SET medicine_name = ?, dosage = ?, date_start = ?, date_end = ?, id_visit = ? WHERE id = ?";
@@ -464,5 +467,6 @@ public class Person extends Client {
 			}
 		}
 	}
+
 
 }

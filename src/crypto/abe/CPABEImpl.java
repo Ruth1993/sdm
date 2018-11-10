@@ -261,7 +261,6 @@ public class CPABEImpl {
 		p.satisfiable = 0;
 		if(p.children == null || size == 0){
 			for(i=0; i<SK.comps.length; i++){
-				System.out.println(p.attr);
 				if(SK.comps[i].attr.equals(p.attr)){
 					p.satisfiable = 1;
 					p.attri = i;

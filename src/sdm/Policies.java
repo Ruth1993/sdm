@@ -4,12 +4,15 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Calendar;
 
 import databaseAccess.DBConnection;
 
 public class Policies {
 
 	Connection connection = DBConnection.getConnection();
+
+	String year = "year"+Calendar.getInstance().get(Calendar.YEAR);
 
 	int uid;
 
@@ -116,28 +119,12 @@ public class Policies {
 	}
 
 	public void setDefaultBIReadingPolicy() {
-		// (SELECT name FROM hospitals) UNION (SELECT name FROM health_clubs
-		// WHERE id IN (SELECT id_health_club FROM health_clubs_patients WHERE
-		// id_patient = 2)) UNION (SELECT name FROM insurances WHERE id IN
-		// (SELECT id_insurance FROM insurances_patients WHERE id_patient = 2))
-		// (SELECT name FROM companies WHERE id IN (SELECT id_company FROM
-		// employments WHERE id_person = 2 AND type_company= 'company')) UNION
-		// (SELECT name FROM health_clubs WHERE id IN (SELECT id_company FROM
-		// employments WHERE id_person = 2 AND type_company= 'healthclub'))
-		// UNION (SELECT name FROM insurances WHERE id IN (SELECT id_company
-		// FROM employments WHERE id_person = 2 AND type_company= 'insurance'))
-		String policy = "";
+		String policy = "( "+year + " AND ( ";
 		Statement stmt;
 		try {
+				policy = policy.concat("hospital OR doctor OR ");
 			stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT name FROM hospitals");
-			while (rs.next()) {
-				policy = policy.concat(rs.getString(1));
-				policy = policy.concat(" OR ");
-			}
-			stmt.close();
-			stmt = connection.createStatement();
-			rs = stmt.executeQuery(
+			ResultSet rs = stmt.executeQuery(
 					"SELECT name FROM health_clubs WHERE id IN (SELECT id_health_club FROM health_clubs_patients WHERE id_patient = "
 							+ uid + ")");
 			while (rs.next()) {
@@ -170,8 +157,7 @@ public class Policies {
 				policy = policy.concat(" OR ");
 			}
 			policy = policy.substring(0, policy.length() - 4);
-			policy = policy.concat(" ) ) OR ");
-			policy = policy.concat("id" + uid);
+			policy = policy.concat(" ) ) ) ) OR id"+uid);
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -216,7 +202,7 @@ public class Policies {
 	public void setDefaultBHIWritingPolicy() {
 		// SELECT id_family_doctor FROM patients_basic_health_info WHERE
 		// id_patient = 2
-		String policy = "";
+		String policy = "( "+year + " AND ( ";
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();
@@ -226,7 +212,7 @@ public class Policies {
 				policy = policy.concat("id");
 				policy = policy.concat(rs.getString(1));
 			}
-			policy = policy.concat(" OR id" + uid);
+			policy = policy.concat(" ) ) OR id"+uid);
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -271,17 +257,13 @@ public class Policies {
 	}
 
 	public void setDefaultBHIReadingPolicy() {
-		// (SELECT name FROM hospitals) UNION (SELECT name FROM health_clubs
-		// WHERE id IN (SELECT id_health_club FROM health_clubs_patients WHERE
-		// id_patient = 2)) UNION (SELECT name FROM insurances WHERE id IN
-		// (SELECT id_insurance FROM insurances_patients WHERE id_patient = 2))
 
-		String policy = "";
+		String policy = "( "+year + " AND ( hospital OR doctor OR ";
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(
-					"(SELECT name FROM hospitals) UNION (SELECT name FROM health_clubs WHERE id IN (SELECT id_health_club FROM health_clubs_patients WHERE id_patient = "
+					"(SELECT name FROM health_clubs WHERE id IN (SELECT id_health_club FROM health_clubs_patients WHERE id_patient = "
 							+ uid
 							+ ")) UNION (SELECT name FROM insurances WHERE id IN (SELECT id_insurance FROM insurances_patients WHERE id_patient = "
 							+ uid + "))");
@@ -289,7 +271,8 @@ public class Policies {
 				policy = policy.concat(rs.getString(1));
 				policy = policy.concat(" OR ");
 			}
-			policy = policy.concat("id" + uid);
+			policy = policy.substring(0, policy.length() - 4);
+			policy = policy.concat(" ) ) OR id"+uid);
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -340,7 +323,7 @@ public class Policies {
 		// SELECT name FROM hospitals WHERE id IN (SELECT id_hospital FROM
 		// hospitals_doctors WHERE id IN (SELECT id_hospital_doctors FROM
 		// patients_visits WHERE id_patient = 2))
-		String policy = "";
+		String policy = "( "+year + " AND ( ";
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();
@@ -353,7 +336,8 @@ public class Policies {
 				policy = policy.concat(rs.getString(1));
 				policy = policy.concat(" OR ");
 			}
-			policy = policy.concat("id" + uid);
+			policy = policy.substring(0, policy.length() - 4);
+			policy = policy.concat(" ) ) OR id"+uid);
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -404,7 +388,7 @@ public class Policies {
 		// 2)
 		// SELECT name FROM insurances WHERE id IN (SELECT id_insurance FROM
 		// insurances_patients WHERE id_patient = 2)
-		String policy = "";
+		String policy = "( "+year + " AND ( ";
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();
@@ -419,7 +403,8 @@ public class Policies {
 				policy = policy.concat(rs.getString(1));
 				policy = policy.concat(" OR ");
 			}
-			policy = policy.concat("id" + uid);
+			policy = policy.substring(0, policy.length() - 4);
+			policy = policy.concat(" ) ) OR id"+uid);
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -464,7 +449,7 @@ public class Policies {
 	public void setDefaultMWritingPolicy() {
 		// SELECT id_doctor FROM hospitals_doctors WHERE id IN (SELECT
 		// id_hospital_doctors FROM patients_visits WHERE id_patient = 2)
-		String policy = "";
+		String policy = "( "+year + " AND ( ";
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();
@@ -475,7 +460,8 @@ public class Policies {
 				policy = policy.concat(rs.getString(1));
 				policy = policy.concat(" OR ");
 			}
-			policy = policy.concat("id" + uid);
+			policy = policy.substring(0, policy.length() - 4);
+			policy = policy.concat(" ) ) OR id"+uid);
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -524,7 +510,7 @@ public class Policies {
 		// SELECT name FROM hospitals WHERE id IN (SELECT id_hospital FROM
 		// hospitals_doctors WHERE id IN (SELECT id_hospital_doctors FROM
 		// patients_visits WHERE id_patient = 2))
-		String policy = "";
+		String policy = "( "+year + " AND ( ";
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();
@@ -537,7 +523,8 @@ public class Policies {
 				policy = policy.concat(rs.getString(1));
 				policy = policy.concat(" OR ");
 			}
-			policy = policy.concat("id" + uid);
+			policy = policy.substring(0, policy.length() - 4);
+			policy = policy.concat(" ) ) OR id"+uid);
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -555,6 +542,7 @@ public class Policies {
 	public String getHCVWritingPolicy() {
 		if (HCVWritingPolicy.equals(" ")) {
 			String policy = getHCVWritingPolicyDB();
+			System.out.println(policy);
 			if (policy != " ") {
 				HCVWritingPolicy = policy;
 				return policy;
@@ -569,7 +557,7 @@ public class Policies {
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT HCWritingPolicy FROM policies WHERE id_person = " + uid);
+			ResultSet rs = stmt.executeQuery("SELECT HCVWritingPolicy FROM policies WHERE id_person = " + uid);
 			while (rs.next()) {
 				policy = rs.getString(1);
 			}
@@ -583,7 +571,7 @@ public class Policies {
 	public void setDefaultHCVWritingPolicy() {
 		// (SELECT name FROM health_clubs WHERE id IN (SELECT id_health_club
 		// FROM health_clubs_patients WHERE id_patient = 2))
-		String policy = "";
+		String policy = "( "+year + " AND ( ";
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();
@@ -594,7 +582,8 @@ public class Policies {
 				policy = policy.concat(rs.getString(1));
 				policy = policy.concat(" OR ");
 			}
-			policy = policy.concat("id" + uid);
+			policy = policy.substring(0, policy.length() - 4);
+			policy = policy.concat(" ) ) OR id"+uid);
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -627,7 +616,7 @@ public class Policies {
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT HCReadingPolicy FROM policies WHERE id_person = " + uid);
+			ResultSet rs = stmt.executeQuery("SELECT HCVReadingPolicy FROM policies WHERE id_person = " + uid);
 			while (rs.next()) {
 				policy = rs.getString(1);
 			}
@@ -641,20 +630,19 @@ public class Policies {
 	public void setDefaultHCVReadingPolicy() {
 		// (SELECT name FROM health_clubs WHERE id IN (SELECT id_health_club
 		// FROM health_clubs_patients WHERE id_patient = 2))
-		String policy = "";
+		String policy = "( "+year + " AND ( ";
 		Statement stmt;
 		try {
-			System.out.println("try");
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery(
 					"SELECT name FROM health_clubs WHERE id IN (SELECT id_health_club FROM health_clubs_patients WHERE id_patient = "
 							+ uid + ")");
 			while (rs.next()) {
-				System.out.println("found something");
 				policy = policy.concat(rs.getString(1));
 				policy = policy.concat(" OR ");
 			}
-			policy = policy.concat("id" + uid);
+			policy = policy.substring(0, policy.length() - 4);
+			policy = policy.concat(" ) ) OR id"+uid);
 			stmt.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
