@@ -38,7 +38,7 @@ public class Main {
 			int id = Integer.parseInt(bufRead.readLine());
 			Person p = new Person(id);
 			p.setPK(PKJSONString);
-			System.out.print("Insert you secret key: ");
+			System.out.print("Insert your secret key: ");
 			String sk = bufRead.readLine();
 			p.setSK("{\"SK\":\"" + sk + "\"}");
 			p.startGUI();
