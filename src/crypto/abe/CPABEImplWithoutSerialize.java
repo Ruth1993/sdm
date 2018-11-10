@@ -154,12 +154,14 @@ public class CPABEImplWithoutSerialize {
 		ciphertext.Cs = m.duplicate().mul(PK.g_hat_alpha.duplicate().powZn(s));
 		ciphertext.C = PK.h.duplicate().powZn(s); 
 		
-		SerializeUtils.serialize(ciphertext, ciphertextFile);
+		File temp = null;
+		
+		SerializeUtils.serialize(ciphertext, temp);
 		FileInputStream fis = null;
 		FileOutputStream fos = null;
 		try {
 			fis = new FileInputStream(file);
-			fos = new FileOutputStream(ciphertextFile, true);
+			fos = new FileOutputStream(temp, true);
 			AES.crypto(Cipher.ENCRYPT_MODE, fis, fos, m);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
