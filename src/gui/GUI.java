@@ -500,7 +500,7 @@ public class GUI extends JFrame implements ActionListener {
 		  JPanel addvisit_panel = new JPanel();
 		  addvisit_panel.setLayout(new BoxLayout(addvisit_panel, BoxLayout.Y_AXIS));
 		  
-		  JLabel l_id_patient = new JLabel("Id patient:");
+		  JLabel l_id_patient = new JLabel("Id patient-healthclub:");
 		  JLabel l_vis_date_start = new JLabel("Date start:");
 		  JLabel l_vis_date_end = new JLabel("Date end:");
 		  JLabel l_reason = new JLabel("Reason:");
