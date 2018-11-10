@@ -33,7 +33,8 @@ public class GUI2 extends JFrame implements ActionListener {
 		// Test DB connection
 		connection = DBConnection.getConnection();
 		
-	    this.p = new Person(7, "Donald Trump", new String[]{"Doctor"});
+	    this.p = new Person(7, "Donald Trump");
+	    this.p.setAttrs(new String[]{"Doctor"});
 		
 		start_panel = new JPanel();
 		start_panel.setLayout(new BoxLayout(start_panel, BoxLayout.Y_AXIS));

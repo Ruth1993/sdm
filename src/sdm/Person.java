@@ -4,13 +4,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-<<<<<<< HEAD
-import databaseAccess.DBConnection;
-=======
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
->>>>>>> b4022d74de2ae3cf102b49382e57b3a2e44da021
 
 import crypto.abe.CPABEImpl;
 import crypto.abe.Parser;

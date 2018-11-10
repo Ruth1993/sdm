@@ -2,14 +2,6 @@ package main;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-<<<<<<< HEAD
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-=======
->>>>>>> b4022d74de2ae3cf102b49382e57b3a2e44da021
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
