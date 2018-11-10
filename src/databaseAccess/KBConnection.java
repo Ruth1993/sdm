@@ -91,6 +91,7 @@ public class KBConnection {
 	public static String getMasterKey() {
 		Statement stmt;
 		String MK = "{\"MK\":\"";
+		Connection connection = KBConnection.getConnection();
 		try {
 			stmt = connection.createStatement();
 			ResultSet rs = stmt.executeQuery("SELECT MasterKey FROM serverkeys");
