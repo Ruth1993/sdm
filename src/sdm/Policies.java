@@ -627,7 +627,7 @@ public class Policies {
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT HCReadingPolicy FROM policies WHERE id_person = " + uid);
+			ResultSet rs = stmt.executeQuery("SELECT HCVReadingPolicy FROM policies WHERE id_person = " + uid);
 			while (rs.next()) {
 				policy = rs.getString(1);
 			}
