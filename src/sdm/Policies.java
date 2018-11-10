@@ -51,23 +51,68 @@ public class Policies {
 
 	public String getBIWritingPolicy() {
 		if (BIWritingPolicy.equals(" ")) {
+			String policy = getBIWritingPolicyDB();
+			if (policy != " ") {
+				BIWritingPolicy = policy;
+				return policy;
+			}
 			setDefaultBIWritingPolicy();
 		}
 		return BIWritingPolicy;
 	}
 
+	public String getBIWritingPolicyDB() {
+		String policy = " ";
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT BIWritingPolicy FROM policies WHERE id_person = " + uid);
+			while (rs.next()) {
+				policy = rs.getString(1);
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return policy;
+	}
+
 	public void setDefaultBIWritingPolicy() {
 		BIWritingPolicy = "id" + uid;
+		DBConnection.update("UPDATE policies SET BIWritingPolicy = '" + BIWritingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public void setBIWritingPolicy(String bIWritingPolicy) {
 		BIWritingPolicy = bIWritingPolicy;
+		DBConnection.update("UPDATE policies SET BIWritingPolicy = '" + BIWritingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public String getBIReadingPolicy() {
-		if (BIReadingPolicy.equals(" "))
+		if (BIReadingPolicy.equals(" ")) {
+			String policy = getBIReadingPolicyDB();
+			if (policy != " ") {
+				BIReadingPolicy = policy;
+				return policy;
+			}
 			setDefaultBIReadingPolicy();
+		}
 		return BIReadingPolicy;
+	}
+
+	public String getBIReadingPolicyDB() {
+		String policy = " ";
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT BIReadingPolicy FROM policies WHERE id_person = " + uid);
+			while (rs.next()) {
+				policy = rs.getString(1);
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return policy;
 	}
 
 	public void setDefaultBIReadingPolicy() {
@@ -115,13 +160,16 @@ public class Policies {
 							+ uid
 							+ " AND type_company= 'company')) UNION (SELECT name FROM health_clubs WHERE id IN (SELECT id_company FROM employments WHERE id_person = "
 							+ uid
-							+ " AND type_company= 'healthclub')) UNION (SELECT name FROM insurances WHERE id IN (SELECT id_company FROM employments WHERE id_person = "
-							+ uid + " AND type_company= 'insurance'))");
-			policy = policy.concat(" ( employer AND ( ");
+							+ " AND type_company= 'health_club')) UNION (SELECT name FROM insurances WHERE id IN (SELECT id_company FROM employments WHERE id_person = "
+							+ uid
+							+ " AND type_company= 'insurance')) UNION (SELECT name FROM hospitals WHERE id IN (SELECT id_company FROM employments WHERE id_person = "
+							+ uid + " AND type_company= 'hospital'))");
+			policy = policy.concat("( employer AND ( ");
 			while (rs.next()) {
 				policy = policy.concat(rs.getString(1));
 				policy = policy.concat(" OR ");
 			}
+			policy = policy.substring(0, policy.length() - 4);
 			policy = policy.concat(" ) ) OR ");
 			policy = policy.concat("id" + uid);
 			stmt.close();
@@ -129,16 +177,40 @@ public class Policies {
 			e.printStackTrace();
 		}
 		BIReadingPolicy = policy;
+		DBConnection.update("UPDATE policies SET BIReadingPolicy = '" + BIReadingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public void setBIReadingPolicy(String bIReadingPolicy) {
 		BIReadingPolicy = bIReadingPolicy;
+		DBConnection.update("UPDATE policies SET BIReadingPolicy = '" + BIReadingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public String getBHIWritingPolicy() {
-		if(BHIWritingPolicy.equals(" "))
+		if (BHIWritingPolicy.equals(" ")) {
+			String policy = getBHIWritingPolicyDB();
+			if (policy != " ") {
+				BHIWritingPolicy = policy;
+				return policy;
+			}
 			setDefaultBHIWritingPolicy();
+		}
 		return BHIWritingPolicy;
+	}
+
+	public String getBHIWritingPolicyDB() {
+		String policy = " ";
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT BHIWritingPolicy FROM policies WHERE id_person = " + uid);
+			while (rs.next()) {
+				policy = rs.getString(1);
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return policy;
 	}
 
 	public void setDefaultBHIWritingPolicy() {
@@ -160,16 +232,42 @@ public class Policies {
 			e.printStackTrace();
 		}
 		BHIWritingPolicy = policy;
+		DBConnection
+				.update("UPDATE policies SET BHIWritingPolicy = '" + BHIWritingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public void setBHIWritingPolicy(String bHIWritingPolicy) {
 		BHIWritingPolicy = bHIWritingPolicy;
+		DBConnection
+				.update("UPDATE policies SET BHIWritingPolicy = '" + BHIWritingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public String getBHIReadingPolicy() {
-		if(BHIReadingPolicy.equals(" "))
-				setDefaultBHIReadingPolicy();
+		if (BHIReadingPolicy.equals(" ")) {
+			String policy = getBHIReadingPolicyDB();
+			if (policy != " ") {
+				BHIReadingPolicy = policy;
+				return policy;
+			}
+			setDefaultBHIReadingPolicy();
+		}
 		return BHIReadingPolicy;
+	}
+
+	public String getBHIReadingPolicyDB() {
+		String policy = " ";
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT BHIReadingPolicy FROM policies WHERE id_person = " + uid);
+			while (rs.next()) {
+				policy = rs.getString(1);
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return policy;
 	}
 
 	public void setDefaultBHIReadingPolicy() {
@@ -197,16 +295,42 @@ public class Policies {
 			e.printStackTrace();
 		}
 		BHIReadingPolicy = policy;
+		DBConnection
+				.update("UPDATE policies SET BHIReadingPolicy = '" + BHIReadingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public void setBHIReadingPolicy(String bHIReadingPolicy) {
 		BHIReadingPolicy = bHIReadingPolicy;
+		DBConnection
+				.update("UPDATE policies SET BHIReadingPolicy = '" + BHIReadingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public String getMVWritingPolicy() {
-		if(MVWritingPolicy.equals(" "))
+		if (MVWritingPolicy.equals(" ")) {
+			String policy = getMVWritingPolicyDB();
+			if (policy != " ") {
+				MVWritingPolicy = policy;
+				return policy;
+			}
 			setDefaultMVWritingPolicy();
+		}
 		return MVWritingPolicy;
+	}
+
+	public String getMVWritingPolicyDB() {
+		String policy = " ";
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT MVWritingPolicy FROM policies WHERE id_person = " + uid);
+			while (rs.next()) {
+				policy = rs.getString(1);
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return policy;
 	}
 
 	public void setDefaultMVWritingPolicy() {
@@ -235,16 +359,40 @@ public class Policies {
 			e.printStackTrace();
 		}
 		MVWritingPolicy = policy;
+		DBConnection.update("UPDATE policies SET MVWritingPolicy = '" + MVWritingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public void setMVWritingPolicy(String mVWritingPolicy) {
 		MVWritingPolicy = mVWritingPolicy;
+		DBConnection.update("UPDATE policies SET MVWritingPolicy = '" + MVWritingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public String getMVReadingPolicy() {
-		if(MVReadingPolicy.equals(" "))
+		if (MVReadingPolicy.equals(" ")) {
+			String policy = getMVReadingPolicyDB();
+			if (policy != " ") {
+				MVReadingPolicy = policy;
+				return policy;
+			}
 			setDefaultMVReadingPolicy();
+		}
 		return MVReadingPolicy;
+	}
+
+	public String getMVReadingPolicyDB() {
+		String policy = " ";
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT MVReadingPolicy FROM policies WHERE id_person = " + uid);
+			while (rs.next()) {
+				policy = rs.getString(1);
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return policy;
 	}
 
 	public void setDefaultMVReadingPolicy() {
@@ -277,16 +425,40 @@ public class Policies {
 			e.printStackTrace();
 		}
 		MVReadingPolicy = policy;
+		DBConnection.update("UPDATE policies SET MVReadingPolicy = '" + MVReadingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public void setMVReadingPolicy(String mVReadingPolicy) {
 		MVReadingPolicy = mVReadingPolicy;
+		DBConnection.update("UPDATE policies SET MVReadingPolicy = '" + MVReadingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public String getMWritingPolicy() {
-		if(MWritingPolicy.equals(" "))
+		if (MWritingPolicy.equals(" ")) {
+			String policy = getMWritingPolicyDB();
+			if (policy != " ") {
+				MWritingPolicy = policy;
+				return policy;
+			}
 			setDefaultMWritingPolicy();
+		}
 		return MWritingPolicy;
+	}
+
+	public String getMWritingPolicyDB() {
+		String policy = " ";
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT MWritingPolicy FROM policies WHERE id_person = " + uid);
+			while (rs.next()) {
+				policy = rs.getString(1);
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return policy;
 	}
 
 	public void setDefaultMWritingPolicy() {
@@ -309,16 +481,40 @@ public class Policies {
 			e.printStackTrace();
 		}
 		MWritingPolicy = policy;
+		DBConnection.update("UPDATE policies SET MWritingPolicy = '" + MWritingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public void setMWritingPolicy(String mWritingPolicy) {
 		MWritingPolicy = mWritingPolicy;
+		DBConnection.update("UPDATE policies SET MWritingPolicy = '" + MWritingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public String getMReadingPolicy() {
-		if(MReadingPolicy.equals(" "))
+		if (MReadingPolicy.equals(" ")) {
+			String policy = getMReadingPolicyDB();
+			if (policy != " ") {
+				MReadingPolicy = policy;
+				return policy;
+			}
 			setDefaultMReadingPolicy();
+		}
 		return MReadingPolicy;
+	}
+
+	public String getMReadingPolicyDB() {
+		String policy = " ";
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT MReadingPolicy FROM policies WHERE id_person = " + uid);
+			while (rs.next()) {
+				policy = rs.getString(1);
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return policy;
 	}
 
 	public void setDefaultMReadingPolicy() {
@@ -347,16 +543,41 @@ public class Policies {
 			e.printStackTrace();
 		}
 		MReadingPolicy = policy;
+		DBConnection.update("UPDATE policies SET MReadingPolicy = '" + MReadingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public void setMReadingPolicy(String mReadingPolicy) {
 		MReadingPolicy = mReadingPolicy;
+
+		DBConnection.update("UPDATE policies SET MReadingPolicy = '" + MReadingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public String getHCVWritingPolicy() {
-		if(HCVWritingPolicy.equals(" "))
+		if (HCVWritingPolicy.equals(" ")) {
+			String policy = getHCVWritingPolicyDB();
+			if (policy != " ") {
+				HCVWritingPolicy = policy;
+				return policy;
+			}
 			setDefaultHCVWritingPolicy();
+		}
 		return HCVWritingPolicy;
+	}
+
+	public String getHCVWritingPolicyDB() {
+		String policy = " ";
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT HCWritingPolicy FROM policies WHERE id_person = " + uid);
+			while (rs.next()) {
+				policy = rs.getString(1);
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return policy;
 	}
 
 	public void setDefaultHCVWritingPolicy() {
@@ -379,17 +600,42 @@ public class Policies {
 			e.printStackTrace();
 		}
 		HCVWritingPolicy = policy;
+		DBConnection
+				.update("UPDATE policies SET HCVWritingPolicy = '" + HCVWritingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public void setHCVWritingPolicy(String hCVWritingPolicy) {
 		HCVWritingPolicy = hCVWritingPolicy;
+		DBConnection
+				.update("UPDATE policies SET HCVWritingPolicy = '" + HCVWritingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public String getHCVReadingPolicy() {
-		if(HCVReadingPolicy.equals(" ")){
+		if (HCVReadingPolicy.equals(" ")) {
+			String policy = getHCVReadingPolicyDB();
+			if (policy != " ") {
+				HCVReadingPolicy = policy;
+				return policy;
+			}
 			setDefaultHCVReadingPolicy();
 		}
 		return HCVReadingPolicy;
+	}
+
+	public String getHCVReadingPolicyDB() {
+		String policy = " ";
+		Statement stmt;
+		try {
+			stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT HCReadingPolicy FROM policies WHERE id_person = " + uid);
+			while (rs.next()) {
+				policy = rs.getString(1);
+			}
+			stmt.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return policy;
 	}
 
 	public void setDefaultHCVReadingPolicy() {
@@ -414,10 +660,14 @@ public class Policies {
 			e.printStackTrace();
 		}
 		HCVReadingPolicy = policy;
+		DBConnection
+				.update("UPDATE policies SET HCVReadingPolicy = '" + HCVReadingPolicy + "' WHERE id_person = " + uid);
 	}
 
 	public void setHCVReadingPolicy(String hCVReadingPolicy) {
 		HCVReadingPolicy = hCVReadingPolicy;
+		DBConnection
+				.update("UPDATE policies SET HCVReadingPolicy = '" + HCVReadingPolicy + "' WHERE id_person = " + uid);
 	}
 
 }

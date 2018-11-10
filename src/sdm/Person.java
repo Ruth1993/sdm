@@ -30,6 +30,9 @@ public class Person extends Client {
 		this.name = name;
 		policies = new Policies(id);
 	}
+	public int getId(){
+		return this.id;
+	}
 
 	private boolean checkWritingPolicy(String tableName, int uid) {
 		Policies p;
@@ -179,7 +182,8 @@ public class Person extends Client {
 			String sql = "UPDATE sdmproject.persons_basic_info SET name = ? , birth_date = ? , birth_place = ?, gender = ? , nationality = ? , address = ? , phone_number = ? WHERE id = ?";
 			try {
 				pstmt = connection.prepareStatement(sql);
-				pstmt.setString(1, name);
+				System.out.println(policies.getBIReadingPolicy());
+				pstmt.setBytes(1, this.enc(name, policies.getBIReadingPolicy(), ""));
 				pstmt.setBytes(2, this.enc(birth_date, policies.getBIReadingPolicy(), ""));
 				pstmt.setBytes(3, this.enc(birth_place, policies.getBIReadingPolicy(), ""));
 				pstmt.setBytes(4, this.enc(gender, policies.getBIReadingPolicy(), ""));
