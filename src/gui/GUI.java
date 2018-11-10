@@ -597,7 +597,7 @@ public class GUI extends JFrame implements ActionListener {
 	    } else if(source == this.s_read_pa_info) {
 	    	showPatientBasicInfo(Integer.parseInt(this.t_uid.getText()));
 	    } else if(source == this.read_patients_visit) {
-	    	showPatientsVisit();
+	    	clickMedicalVisit();
 	    } else if(source == this.read_patients_medicine) {
 	    	showPatientsMedicine();
 	    } else if(source == this.add_patient) {
