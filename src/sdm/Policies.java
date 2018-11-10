@@ -569,7 +569,7 @@ public class Policies {
 		Statement stmt;
 		try {
 			stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT HCWritingPolicy FROM policies WHERE id_person = " + uid);
+			ResultSet rs = stmt.executeQuery("SELECT HCVWritingPolicy FROM policies WHERE id_person = " + uid);
 			while (rs.next()) {
 				policy = rs.getString(1);
 			}

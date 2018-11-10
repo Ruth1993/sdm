@@ -590,7 +590,7 @@ public class Parser {
 		Parser parser = new Parser(true);
 		Policy p = parser.parse(input);
 		System.out.println(p.k);
-	}
+}
 
 }
 // ################### END OF CLASS ##############################

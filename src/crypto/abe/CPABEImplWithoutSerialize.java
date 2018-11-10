@@ -145,6 +145,36 @@ public class CPABEImplWithoutSerialize {
 		return os.toByteArray();
 	}
 	
+	public static void enc(File file, Policy p, PublicKey PK, String[] output){
+		File temp = null;
+		Element m = PairingManager.defaultPairing.getGT().newRandomElement();
+		Element s = pairing.getZr().newElement().setToRandom();
+		fill_policy(p, s, PK);
+		Ciphertext ciphertext = new Ciphertext();
+		ciphertext.p = p;
+		//此处m.duplicate()是为了后面AES加密中还需要用到m
+		ciphertext.Cs = m.duplicate().mul(PK.g_hat_alpha.duplicate().powZn(s));
+		ciphertext.C = PK.h.duplicate().powZn(s); 
+		
+		SerializeUtils.serialize(ciphertext, temp);
+		FileInputStream fis = null;
+		FileOutputStream fos = null;
+		try {
+			fis = new FileInputStream(file);
+			fos = new FileOutputStream(temp, true);
+			AES.crypto(Cipher.ENCRYPT_MODE, fis, fos, m);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}finally{
+			try {
+				fis.close();
+				fos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
 	public static Element dec(Ciphertext ciphertext, SecretKey SK, PublicKey PK){
 		check_sat(SK, ciphertext.p);
 		if(ciphertext.p.satisfiable != 1){
