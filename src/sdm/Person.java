@@ -31,7 +31,8 @@ public class Person extends Client {
 		this.name = name;
 		policies = new Policies(id);
 	}
-	public int getId(){
+
+	public int getId() {
 		return this.id;
 	}
 
@@ -139,8 +140,7 @@ public class Person extends Client {
 			ResultSet res = Statement.executeQuery("SELECT * FROM sdmproject.persons_basic_info WHERE id = " + uid);
 			while (res.next()) {
 				results.add(res.getString(1));
-				results.add(res.getString(2));
-				for (int i = 3; i <= 8; i++) {
+				for (int i = 2; i <= 8; i++) {
 					System.out.println(res.getBytes(i).toString());
 					System.out.println(this.dec(res.getBytes(i)));
 					results.add(this.dec(res.getBytes(i)));
@@ -288,6 +288,28 @@ public class Person extends Client {
 		return null;
 	}
 
+	public void updateMedicalVisitDB(int visitid, int uid, String date_start, String date_end, String reason,
+			String results, int id_hospital_doctors) {
+		if (checkWritingPolicy("MedicalVisit", uid)) {
+			PreparedStatement pstmt;
+			String sql = "UPDATE sdmproject.patients_visits SET id_patient = ?, date_start = ?, date_end = ?, reason = ?, results = ?, id_hospital_doctors = ? WHERE id = ?";
+			try {
+				pstmt = connection.prepareStatement(sql);
+				pstmt.setInt(1, uid);
+				pstmt.setBytes(2, this.enc(date_start, policies.getMVReadingPolicy(), ""));
+				pstmt.setBytes(3, this.enc(date_end, policies.getMVReadingPolicy(), ""));
+				pstmt.setBytes(4, this.enc(reason, policies.getMVReadingPolicy(), ""));
+				pstmt.setBytes(5, this.enc(results, policies.getMVReadingPolicy(), ""));
+				pstmt.setInt(6, id_hospital_doctors);
+				pstmt.setInt(6, visitid);
+				pstmt.executeUpdate();
+				pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public void addMedicalVisitDB(int uid, String date_start, String date_end, String reason, String results,
 			int id_hospital_doctors) {
 		if (checkWritingPolicy("MedicalVisit", uid)) {
@@ -333,6 +355,27 @@ public class Person extends Client {
 		return null;
 	}
 
+	public void updateMedicineDB(int rowid, int uid, String medicine_name, String dosage, String date_start, String date_end,
+			int id_visit) {
+		if (checkWritingPolicy("Medicine", uid)) {
+			PreparedStatement pstmt;
+			String sql = "UPDATE patients_medicines SET medicine_name = ?, dosage = ?, date_start = ?, date_end = ?, id_visit = ? WHERE id = ?";
+			try {
+				pstmt = connection.prepareStatement(sql);
+				pstmt.setBytes(1, this.enc(medicine_name, policies.getMReadingPolicy(), ""));
+				pstmt.setBytes(2, this.enc(dosage, policies.getMReadingPolicy(), ""));
+				pstmt.setBytes(3, this.enc(date_start, policies.getMReadingPolicy(), ""));
+				pstmt.setBytes(4, this.enc(date_end, policies.getMReadingPolicy(), ""));
+				pstmt.setInt(5, id_visit);
+				pstmt.setInt(6, rowid);
+				pstmt.executeUpdate();
+				pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
 	public void addMedicineDB(int uid, String medicine_name, String dosage, String date_start, String date_end,
 			int id_visit) {
 		if (checkWritingPolicy("Medicine", uid)) {
@@ -375,6 +418,28 @@ public class Person extends Client {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public void updateHealthClubVisitsDB(int rowid, int uid, int id_patient_healthclub, String date, String duration,
+			String reasons, String results, String comments) {
+		if (checkWritingPolicy("HealthClubVisit", uid)) {
+			PreparedStatement pstmt;
+			String sql = "UPDATE patients_health_clubs_visits SET id_patient_healthclub = ?, date = ?, duration = ?, reasons = ?, results = ?, comments = ? WHERE id = ?";
+			try {
+				pstmt = connection.prepareStatement(sql);
+				pstmt.setInt(1, id_patient_healthclub);
+				pstmt.setBytes(2, this.enc(date, policies.getHCVReadingPolicy(), ""));
+				pstmt.setBytes(3, this.enc(duration, policies.getHCVReadingPolicy(), ""));
+				pstmt.setBytes(4, this.enc(reasons, policies.getHCVReadingPolicy(), ""));
+				pstmt.setBytes(5, this.enc(results, policies.getHCVReadingPolicy(), ""));
+				pstmt.setBytes(6, this.enc(comments, policies.getHCVReadingPolicy(), ""));
+				pstmt.setInt(7, rowid);
+				pstmt.executeUpdate();
+				pstmt.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	public void addHealthClubVisitsDB(int uid, int id_patient_healthclub, String date, String duration, String reasons,
