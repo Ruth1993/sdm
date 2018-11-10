@@ -26,19 +26,25 @@ public class GUI extends JFrame implements ActionListener {
 	  private JPanel cards;
 	  private JPanel menu_panel;
 	  private JPanel content_panel;
+	  private JPanel read_p_info_panel;
 	  
 	  //Title
 	  private JLabel doctor_title;
 	  
 	  //Menu components
 	  private JMenuBar menu;
-	  private JMenu read, add, change;
-	  private JMenuItem read_persons_basic_info, read_patients_basic_info, read_patients_visit, read_patients_medicine;
-	  private JMenuItem add_person;
-	  private JMenuItem add_patient;
-	  private JMenuItem add_visit;
-	  private JMenuItem add_medicine;
-	  private JMenuItem change_patient;
+	  private JMenu read, add, update;
+	  private JMenuItem read_persons_basic_info, read_patients_basic_info, read_patients_visit, read_patients_medicine, read_healthclub_visit;
+	  private JMenuItem add_person, add_patient, add_visit, add_medicine, add_healthclub_visit;
+	  private JMenuItem update_person, update_patient;
+	  
+	  //Read person basic info
+	  private JTextField t_uid;
+	  private JButton s_read_p_info;
+	  
+	  //Add person info components
+	  private JTextField[] t_add_person;
+	  private JButton s_add_person;
 	  
 	  //Add patient info components
 	  private JTextField t_id;
@@ -66,10 +72,10 @@ public class GUI extends JFrame implements ActionListener {
 	  private JTextField t_id_visit;
 	  private JButton s_addmedicine;
 	  
-	  //Change 
+	  //Update
 	  
 	  public GUI(Connection connection, Person p) {
-		    super("PHR system interface - Doctor panel"); 
+		    super("PHR system interface"); 
 		    
 		    this.connection = connection;
 		    
@@ -88,6 +94,8 @@ public class GUI extends JFrame implements ActionListener {
 		    
 	        con.add(menu_panel, BorderLayout.NORTH);
 	        con.add(content_panel, BorderLayout.CENTER);
+	        
+	        setVisible(true);
 	  }
 	  
 	  public void showMenu() {
@@ -101,36 +109,47 @@ public class GUI extends JFrame implements ActionListener {
 		    this.read_patients_basic_info = new JMenuItem("Patients basic info");
 		    this.read_patients_visit = new JMenuItem("Patients visits");
 		    this.read_patients_medicine = new JMenuItem("Patients medicines");
+		    this.read_healthclub_visit = new JMenuItem("Healthclub visit");
 		    this.read.add(read_persons_basic_info);
 		    this.read.addSeparator();
 		    this.read.add(read_patients_basic_info);
 		    this.read.add(read_patients_visit);
 		    this.read.add(read_patients_medicine);
+		    this.read.addSeparator();
+		    this.read.add(read_healthclub_visit);
 		    
 		    //Menu item Add
 		    this.add = new JMenu("Add");
+		    this.add_person = new JMenuItem("New person");
 		    this.add_patient = new JMenuItem("New patient");
 		    this.add_visit = new JMenuItem("New visit");
 		    this.add_medicine = new JMenuItem("New medicine");
+		    this.add_healthclub_visit = new JMenuItem("New healthclub visit");
+		    this.add.add(this.add_person);
 		    this.add.add(this.add_patient);
 		    this.add.add(this.add_visit);
 		    this.add.add(this.add_medicine);
+		    this.add.add(this.add_healthclub_visit);
 		    
-		    //Menu item change
-		    this.change = new JMenu("Change");
+		    //Menu item update
+		    this.update = new JMenu("Update");
 		    
 		    this.menu.add(read); 
 		    this.menu.add(add);
-		    this.menu.add(change);
+		    this.menu.add(update);
 		    
 			//Add actionlisteners
 			read_persons_basic_info.addActionListener(this);
 			read_patients_basic_info.addActionListener(this);
 			read_patients_visit.addActionListener(this);
 			read_patients_medicine.addActionListener(this);
+			read_healthclub_visit.addActionListener(this);
+			
+			add_person.addActionListener(this);
 			add_patient.addActionListener(this);
 			add_visit.addActionListener(this);
 			add_medicine.addActionListener(this);
+			add_healthclub_visit.addActionListener(this);
 
 			menu_panel.add(menu);
 	  }
@@ -138,6 +157,7 @@ public class GUI extends JFrame implements ActionListener {
 	  /*
 	   * Show a table with all the persons
 	   */
+	  /**
 	  public void showPersonBasicInfo() {
 		  content_panel.removeAll();
 		  
@@ -177,38 +197,39 @@ public class GUI extends JFrame implements ActionListener {
 		  JScrollPane scrollPane = new JScrollPane(table);
 		  this.content_panel.add(scrollPane);
 		  repaint_panel();
-	  }
+	  }*/
 	  
-	  public void showPersonBasicInfo(int person_id) {
+	  public void showPersonBasicInfo() {
 		  content_panel.removeAll();
 		  
-		  Object rowData[][] = new String[1][8];
-		  Object columnNames[] = {"Id", "Name", "Birth date", "Birth place", "Gender", "Nationality", "Address", "Phone number"};
+		  read_p_info_panel = new JPanel();
+		  read_p_info_panel.setLayout(new BoxLayout(read_p_info_panel, BoxLayout.Y_AXIS));
 		  
-		  try {
-				Statement Statement = this.connection.createStatement();
-				ResultSet res = Statement.executeQuery("SELECT * FROM sdmproject.persons_basic_info WHERE id="+person_id);
-				while (res.next()) {
-					String[] row = new String[8];
-					row[0] = res.getString("id");
-					row[1] = res.getString("name");
-					row[2] = res.getString("birth_date");
-					row[3] = res.getString("birth_place");
-					row[4] = res.getString("gender");
-					row[5] = res.getString("nationality");
-					row[6] = res.getString("address");
-					row[7] = res.getString("phone_number");
-					rowData[0] = row;
-				}
-				res.close();
-				Statement.close();
-		  } catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-		  }
+		  JLabel l_uid = new JLabel("Insert id of person:");
+		  t_uid = new JTextField(20);
+		  s_read_p_info = new JButton("Submit");
+		  
+		  read_p_info_panel.add(l_uid);
+		  read_p_info_panel.add(t_uid);
+		  read_p_info_panel.add(s_read_p_info);
+		  
+		  s_read_p_info.addActionListener(this);
+		  
+		  content_panel.add(read_p_info_panel);
+		  repaint_panel();
+	  }
+	  
+	  public void showPersonBasicInfoTable(int person_id) {
+		  //ArrayList<String> results = p.readBasicInfoDB(person_id);
+		  //Object[] array = results.toArray(new String[results.size()]);
+		  
+		  Object rowData[][] = new String[1][8];
+		  //rowData[0] = array;
+		  Object columnNames[] = {"Id", "Name", "Birth date", "Birth place", "Gender", "Nationality", "Address", "Phone number"};
 		  
 		  JTable table = new JTable(rowData, columnNames);
 		  JScrollPane scrollPane = new JScrollPane(table);
+		  
 		  this.content_panel.add(scrollPane);
 		  repaint_panel();
 	  }
@@ -533,6 +554,8 @@ public class GUI extends JFrame implements ActionListener {
 	    
 	    if(source == this.read_persons_basic_info) {
 	    	showPersonBasicInfo();
+	    } else if(source == this.s_read_p_info) {
+	    	showPersonBasicInfoTable(Integer.parseInt(this.t_uid.getText()));
 	    } else if(source == this.read_patients_basic_info) {
 	    	showPatientBasicInfo();
 	    } else if(source == this.read_patients_visit) {
@@ -549,9 +572,4 @@ public class GUI extends JFrame implements ActionListener {
 	    	showAddMedicine();
 	    }
 	  }
-	  
-	  /**
-	  public static void main(String args[]) {	  
-		  new GUI();
-	  }*/
 }
