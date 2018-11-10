@@ -12,7 +12,6 @@ import java.util.List;
 import javax.swing.*;
 
 import databaseAccess.DBConnection;
-import sdm.Company;
 import sdm.Person;
 
 public class GUI extends JFrame implements ActionListener {
@@ -26,10 +25,9 @@ public class GUI extends JFrame implements ActionListener {
 	  private JPanel cards;
 	  private JPanel menu_panel;
 	  private JPanel content_panel;
-	  private JPanel read_p_info_panel;
-	  
-	  //Title
-	  private JLabel doctor_title;
+	  private JPanel read_pe_info_panel;
+	  private JPanel read_pa_info_panel;
+	  private JPanel read_med_visit_panel;
 	  
 	  //Menu components
 	  private JMenuBar menu;
@@ -38,9 +36,11 @@ public class GUI extends JFrame implements ActionListener {
 	  private JMenuItem add_person, add_patient, add_visit, add_medicine, add_healthclub_visit;
 	  private JMenuItem update_person, update_patient;
 	  
-	  //Read person basic info
+	  //Read person/patient/medical visit info
 	  private JTextField t_uid;
-	  private JButton s_read_p_info;
+	  private JButton s_read_pe_info;
+	  private JButton s_read_pa_info;
+	  private JButton s_read_med_visit;
 	  
 	  //Add person info components
 	  private JTextField[] t_add_person;
@@ -199,32 +199,33 @@ public class GUI extends JFrame implements ActionListener {
 		  repaint_panel();
 	  }*/
 	  
-	  public void showPersonBasicInfo() {
+	  public void clickPersonBasicInfo() {
 		  content_panel.removeAll();
 		  
-		  read_p_info_panel = new JPanel();
-		  read_p_info_panel.setLayout(new BoxLayout(read_p_info_panel, BoxLayout.Y_AXIS));
+		  read_pe_info_panel = new JPanel();
+		  read_pe_info_panel.setLayout(new BoxLayout(read_pe_info_panel, BoxLayout.Y_AXIS));
 		  
 		  JLabel l_uid = new JLabel("Insert id of person:");
 		  t_uid = new JTextField(20);
-		  s_read_p_info = new JButton("Submit");
+		  s_read_pe_info = new JButton("Submit");
 		  
-		  read_p_info_panel.add(l_uid);
-		  read_p_info_panel.add(t_uid);
-		  read_p_info_panel.add(s_read_p_info);
+		  read_pe_info_panel.add(l_uid);
+		  read_pe_info_panel.add(t_uid);
+		  read_pe_info_panel.add(s_read_pe_info);
 		  
-		  s_read_p_info.addActionListener(this);
+		  s_read_pe_info.addActionListener(this);
 		  
-		  content_panel.add(read_p_info_panel);
+		  content_panel.add(read_pe_info_panel);
 		  repaint_panel();
 	  }
 	  
 	  public void showPersonBasicInfoTable(int person_id) {
-		  //ArrayList<String> results = p.readBasicInfoDB(person_id);
-		  //Object[] array = results.toArray(new String[results.size()]);
+		  ArrayList<String> results = p.readBasicInfoDB(person_id);
+
+		  Object[] array = results.toArray(new String[results.size()]);
 		  
-		  Object rowData[][] = new String[1][8];
-		  //rowData[0] = array;
+		  Object rowData[][] = new String[1][results.size()];
+		  rowData[0] = array;
 		  Object columnNames[] = {"Id", "Name", "Birth date", "Birth place", "Gender", "Nationality", "Address", "Phone number"};
 		  
 		  JTable table = new JTable(rowData, columnNames);
@@ -234,47 +235,82 @@ public class GUI extends JFrame implements ActionListener {
 		  repaint_panel();
 	  }
 	  
-	  public void showPatientBasicInfo() {
+	  public void clickPatientBasicInfo() {
 		  content_panel.removeAll();
 		  
-		  List<String[]> rowDataList = new ArrayList<String[]>();
+		  read_pa_info_panel = new JPanel();
+		  read_pa_info_panel.setLayout(new BoxLayout(read_pa_info_panel, BoxLayout.Y_AXIS));
 		  
-		  try {
-				Statement Statement = this.connection.createStatement();
-				ResultSet res = Statement.executeQuery("SELECT * FROM sdmproject.patients_basic_health_info");
-				while (res.next()) {
-					String[] row = new String[6];
-					row[0] = res.getString("id_patient");
-					row[1] = res.getString("blood_type");
-					row[2] = res.getString("weight");
-					row[3] = res.getString("height");
-					row[4] = res.getString("emergency_contact");
-					row[5] = res.getString("id_family_doctor");
-					rowDataList.add(row);
-				}
-				res.close();
-				Statement.close();
-		  } catch (SQLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-		  }
+		  JLabel l_uid = new JLabel("Insert id of patient:");
+		  t_uid = new JTextField(20);
+		  s_read_pa_info = new JButton("Submit");
 		  
-		  Object[][] rowData = new Object[rowDataList.size()][6];
+		  read_pa_info_panel.add(l_uid);
+		  read_pa_info_panel.add(t_uid);
+		  read_pa_info_panel.add(s_read_pa_info);
 		  
-		  for(int i=0; i<rowDataList.size(); i++) {
-			  rowData[i] = rowDataList.get(i);
-		  }
+		  s_read_pa_info.addActionListener(this);
 		  
+		  content_panel.add(read_pa_info_panel);
+		  repaint_panel();
+	  }
+	  
+	  public void showPatientBasicInfo(int person_id) {
+		  content_panel.removeAll();
+		  
+		  ArrayList<String> results = p.readBasicHealthInfoDB(person_id);
+
+		  Object[] array = results.toArray(new String[results.size()]);
+		  
+		  Object rowData[][] = new String[1][results.size()];
+		  rowData[0] = array;
 		  Object[] columnNames = {"Id", "Blood type", "Weight (kg)", "Height (cm)", "Emergency contact", "Id family doctor"};
 		  
 		  JTable table = new JTable(rowData, columnNames);
 		  JScrollPane scrollPane = new JScrollPane(table);
+		  
 		  this.content_panel.add(scrollPane);
 		  repaint_panel();
 	  }
 	  
-	  public void showPatientsVisit() {
+	  public void clickMedicalVisit() {
 		  content_panel.removeAll();
+		  
+		  read_med_visit_panel = new JPanel();
+		  read_med_visit_panel.setLayout(new BoxLayout(read_med_visit_panel, BoxLayout.Y_AXIS));
+		  
+		  JLabel l_uid = new JLabel("Insert id of patient:");
+		  t_uid = new JTextField(20);
+		  s_read_med_visit = new JButton("Submit");
+		  
+		  read_med_visit_panel.add(l_uid);
+		  read_med_visit_panel.add(t_uid);
+		  read_med_visit_panel.add(s_read_pa_info);
+		  
+		  s_read_med_visit.addActionListener(this);
+		  
+		  content_panel.add(read_med_visit_panel);
+		  repaint_panel();
+	  }
+	  
+	  public void showMedicalVisit(int person_id) {
+		  content_panel.removeAll();
+		  
+		  /**
+		  ArrayList<String> results = p.readBasicHealthInfoDB(person_id);
+
+		  Object[] array = results.toArray(new String[results.size()]);
+		  
+		  Object rowData[][] = new String[1][results.size()];
+		  rowData[0] = array;
+		  Object[] columnNames = {"Id visit", "Id patient", "Start date", "End date", "Reason", "Results", "Id hospital doctors"};
+		  
+		  JTable table = new JTable(rowData, columnNames);
+		  JScrollPane scrollPane = new JScrollPane(table);
+		  
+		  this.content_panel.add(scrollPane);
+		  repaint_panel();
+		  ///////*/
 		  
 		  List<String[]> rowDataList = new ArrayList<String[]>();
 		  
@@ -409,7 +445,7 @@ public class GUI extends JFrame implements ActionListener {
 		  String emerg_contact = this.t_emerg_contact.getText();
 		  String id_doc = this.t_id_doc.getText();
 
-		  p.insertPatientDB(id, blood_type, weight, height, emerg_contact, id_doc);
+		 // p.insertBasicHealthInfoDB(id, blood_type, weight, height, emerg_contact, id_doc);
 		  
 		  t_id.setText("");
 		  t_bloodtype.setText("");
@@ -473,7 +509,7 @@ public class GUI extends JFrame implements ActionListener {
 		  String results = this.t_results.getText();
 		  String id_hospital_doctors = this.t_id_hospital_doctors.getText();
 
-		  p.insertVisitDB(id_patient, vis_date_start, vis_date_end, reason, results, id_hospital_doctors);
+		  //p.insertVisitDB(id_patient, vis_date_start, vis_date_end, reason, results, id_hospital_doctors);
 		  
 		  t_id_patient.setText("");
 		  t_vis_date_start.setText("");
@@ -532,7 +568,7 @@ public class GUI extends JFrame implements ActionListener {
 		  String med_date_end = this.t_vis_date_end.getText();
 		  Integer id_visit = Integer.parseInt(t_id_visit.getText());
 
-		  p.insertMedicineDB(med_name, dosage, med_date_start, med_date_end, id_visit);
+		  //p.insertMedicineDB(med_name, dosage, med_date_start, med_date_end, id_visit);
 		  
 		  t_med_name.setText("");
 		  t_dosage.setText("");
@@ -553,11 +589,13 @@ public class GUI extends JFrame implements ActionListener {
 	    Object source = event.getSource();
 	    
 	    if(source == this.read_persons_basic_info) {
-	    	showPersonBasicInfo();
-	    } else if(source == this.s_read_p_info) {
+	    	clickPersonBasicInfo();
+	    } else if(source == this.s_read_pe_info) {
 	    	showPersonBasicInfoTable(Integer.parseInt(this.t_uid.getText()));
 	    } else if(source == this.read_patients_basic_info) {
-	    	showPatientBasicInfo();
+	    	clickPatientBasicInfo();
+	    } else if(source == this.s_read_pa_info) {
+	    	showPatientBasicInfo(Integer.parseInt(this.t_uid.getText()));
 	    } else if(source == this.read_patients_visit) {
 	    	showPatientsVisit();
 	    } else if(source == this.read_patients_medicine) {

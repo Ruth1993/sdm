@@ -8,7 +8,7 @@ import sdm.Person;
 public class TestMain {
 	public static void main(String[] args) {
 		Connection connection = DBConnection.getConnection();
-		Person p = new Person(2, "Barack Obama", new String[]{"Doctor"});
+		Person p = new Person(25, "George Bush");
 		new GUI(connection, p);
 	}
 }
