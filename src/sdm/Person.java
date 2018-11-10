@@ -17,6 +17,8 @@ import java.sql.PreparedStatement;
 
 import databaseAccess.DBConnection;
 
+import gui.GUI;
+
 public class Person extends Client {
 	/** Basic info */
 	private int id;
@@ -397,5 +399,8 @@ public class Person extends Client {
 			}
 		}
 	}
-
+	
+	public void startGUI() {
+		new GUI(connection, this);
+	}
 }

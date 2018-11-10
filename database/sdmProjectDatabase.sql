@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 -- phpMyAdmin SQL Dump
 -- version 3.3.9
 -- http://www.phpmyadmin.net
@@ -962,4 +961,3 @@ ALTER TABLE `patients_visits`
 --
 ALTER TABLE `policies`
   ADD CONSTRAINT `policies_ibfk_1` FOREIGN KEY (`id_person`) REFERENCES `persons_basic_info` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
->>>>>>> a96df0e24009ea0c4774e8ab208681b2caa09588
