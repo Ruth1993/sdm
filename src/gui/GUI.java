@@ -137,7 +137,7 @@ public class GUI extends JFrame implements ActionListener {
 		    this.read_patients_basic_info = new JMenuItem("Patients basic info");
 		    this.read_patients_visit = new JMenuItem("Patients visits");
 		    this.read_patients_medicine = new JMenuItem("Patients medicines");
-		    this.read_healthclub_visit = new JMenuItem("Healthclub visit");
+		    this.read_healthclub_visit = new JMenuItem("Health Club visit");
 		    this.read.add(read_persons_basic_info);
 		    this.read.addSeparator();
 		    this.read.add(read_patients_basic_info);
@@ -151,7 +151,7 @@ public class GUI extends JFrame implements ActionListener {
 		    this.add_patient = new JMenuItem("New patient");
 		    this.add_visit = new JMenuItem("New visit");
 		    this.add_medicine = new JMenuItem("New medicine");
-		    this.add_healthclub_visit = new JMenuItem("New healthclub visit");
+		    this.add_healthclub_visit = new JMenuItem("New Health Club visit");
 		    this.add.add(this.add_patient);
 		    this.add.add(this.add_visit);
 		    this.add.add(this.add_medicine);
@@ -481,7 +481,7 @@ public class GUI extends JFrame implements ActionListener {
 		  String emerg_contact = this.t_emerg_contact.getText();
 		  Integer id_doc = Integer.parseInt(this.t_id_doc.getText());
 
-		  p.insertBasicHealthInfoDB(id, blood_type, weight, height, emerg_contact, id_doc);
+		  p.insertBasicHealthInfoDB(id, blood_type, weight, height, emerg_contact, id_doc);	  
 		  
 		  t_id.setText("");
 		  t_bloodtype.setText("");
