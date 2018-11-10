@@ -75,14 +75,14 @@ public class Person extends Client {
 
 	public void getAttributeListDB() {
 		ArrayList<String> attributs = new ArrayList<String>();
-		String year = "year"+Calendar.getInstance().get(Calendar.YEAR);
+		String year = "year" + Calendar.getInstance().get(Calendar.YEAR);
 		attributs.add(year);
-		attributs.add("id"+ id);
+		attributs.add("id" + id);
 		try {
 			Statement Statement = connection.createStatement();
 			ResultSet res = Statement.executeQuery("SELECT * FROM sdmproject.employments WHERE id_person = " + id);
 			while (res.next()) {
-				if (!attributs.contains(res.getString("type_job"))){
+				if (!attributs.contains(res.getString("type_job"))) {
 					attributs.add(res.getString("type_job"));
 					attributs.add(res.getString("type_company"));
 				}
@@ -270,8 +270,9 @@ public class Person extends Client {
 		ArrayList<ArrayList<String>> results = new ArrayList<ArrayList<String>>();
 		try {
 			Statement Statement = connection.createStatement();
-			ResultSet res = Statement
-					.executeQuery("SELECT patients_visits.id, patients_visits.id_patient, patients_visits.date_start, patients_visits.date_end, patients_visits.reason, patients_visits.results, patients_visits.id_hospital_doctors, hospitals_doctors.id_doctor, hospitals.name FROM patients_visits INNER JOIN hospitals_doctors ON patients_visits.id_hospital_doctors  = hospitals_doctors.id AND patients_visits.id_patient = "+uid+" INNER JOIN hospitals ON hospitals.id = hospitals_doctors.id_hospital");
+			ResultSet res = Statement.executeQuery(
+					"SELECT patients_visits.id, patients_visits.id_patient, patients_visits.date_start, patients_visits.date_end, patients_visits.reason, patients_visits.results, patients_visits.id_hospital_doctors, hospitals_doctors.id_doctor, hospitals.name FROM patients_visits INNER JOIN hospitals_doctors ON patients_visits.id_hospital_doctors  = hospitals_doctors.id AND patients_visits.id_patient = "
+							+ uid + " INNER JOIN hospitals ON hospitals.id = hospitals_doctors.id_hospital");
 			while (res.next()) {
 				ArrayList<String> subresults = new ArrayList<String>();
 				subresults.add(res.getString(1));
@@ -292,7 +293,7 @@ public class Person extends Client {
 		}
 		return null;
 	}
-	
+
 	public ArrayList<ArrayList<String>> readUpdateMedicalVisitDB(int uid) {
 		ArrayList<ArrayList<String>> results = new ArrayList<ArrayList<String>>();
 		try {
@@ -366,7 +367,9 @@ public class Person extends Client {
 		try {
 			Statement Statement = connection.createStatement();
 			ResultSet res = Statement.executeQuery(
-					"SELECT patients_medicines.id, patients_medicines.medicine_name, patients_medicines.dosage, patients_medicines.date_start, patients_medicines.date_end, patients_medicines.id_visit, patients_visits.id_patient, hospitals_doctors.id_doctor, hospitals.name FROM patients_medicines INNER JOIN patients_visits ON patients_medicines.id_visit = patients_visits.id AND patients_visits.id_patient = "+uid+" INNER JOIN hospitals_doctors ON patients_visits.id_hospital_doctors  = hospitals_doctors.id INNER JOIN hospitals ON hospitals.id = hospitals_doctors.id_hospital");
+					"SELECT patients_medicines.id, patients_medicines.medicine_name, patients_medicines.dosage, patients_medicines.date_start, patients_medicines.date_end, patients_medicines.id_visit, patients_visits.id_patient, hospitals_doctors.id_doctor, hospitals.name FROM patients_medicines INNER JOIN patients_visits ON patients_medicines.id_visit = patients_visits.id AND patients_visits.id_patient = "
+							+ uid
+							+ " INNER JOIN hospitals_doctors ON patients_visits.id_hospital_doctors  = hospitals_doctors.id INNER JOIN hospitals ON hospitals.id = hospitals_doctors.id_hospital");
 			while (res.next()) {
 				ArrayList<String> subresults = new ArrayList<String>();
 				subresults.add(res.getString(1));
@@ -387,7 +390,7 @@ public class Person extends Client {
 		}
 		return null;
 	}
-	
+
 	public ArrayList<ArrayList<String>> readUpdateMedicineDB(int uid) {
 		ArrayList<ArrayList<String>> results = new ArrayList<ArrayList<String>>();
 		try {
@@ -415,50 +418,87 @@ public class Person extends Client {
 
 	public void updateMedicineDB(int rowid, int uid, String medicine_name, String dosage, String date_start,
 			String date_end, int id_visit) {
-		if (checkWritingPolicy("Medicine", uid)) {
-			PreparedStatement pstmt;
-			String sql = "UPDATE patients_medicines SET medicine_name = ?, dosage = ?, date_start = ?, date_end = ?, id_visit = ? WHERE id = ?";
-			try {
-				pstmt = connection.prepareStatement(sql);
-				pstmt.setBytes(1, this.enc(medicine_name, policies.getMReadingPolicy(), ""));
-				pstmt.setBytes(2, this.enc(dosage, policies.getMReadingPolicy(), ""));
-				pstmt.setBytes(3, this.enc(date_start, policies.getMReadingPolicy(), ""));
-				pstmt.setBytes(4, this.enc(date_end, policies.getMReadingPolicy(), ""));
-				pstmt.setInt(5, id_visit);
-				pstmt.setInt(6, rowid);
-				pstmt.executeUpdate();
-				pstmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+		String str = "SELECT CASE WHEN EXISTS (SELECT id FROM `patients_visits` WHERE id_patient = " + uid
+				+ " AND id = " + id_visit + ") THEN 'TRUE' ELSE 'FALSE' END";
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet res = stmt.executeQuery(str);
+			while (res.next()) {
+				str = res.getString(1);
 			}
+			res.close();
+			stmt.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		if (str == "TRUE") {
+			if (checkWritingPolicy("Medicine", uid)) {
+				PreparedStatement pstmt;
+				String sql = "UPDATE patients_medicines SET medicine_name = ?, dosage = ?, date_start = ?, date_end = ?, id_visit = ? WHERE id = ?";
+				try {
+					pstmt = connection.prepareStatement(sql);
+					pstmt.setBytes(1, this.enc(medicine_name, policies.getMReadingPolicy(), ""));
+					pstmt.setBytes(2, this.enc(dosage, policies.getMReadingPolicy(), ""));
+					pstmt.setBytes(3, this.enc(date_start, policies.getMReadingPolicy(), ""));
+					pstmt.setBytes(4, this.enc(date_end, policies.getMReadingPolicy(), ""));
+					pstmt.setInt(5, id_visit);
+					pstmt.setInt(6, rowid);
+					pstmt.executeUpdate();
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			System.out.println("WRONG (user id, visit id) combination");
 		}
 	}
 
 	public void addMedicineDB(int uid, String medicine_name, String dosage, String date_start, String date_end,
 			int id_visit) {
-		if (checkWritingPolicy("Medicine", uid)) {
-			PreparedStatement pstmt;
-			String sql = "INSERT INTO sdmproject.patients_medicines (medicine_name, dosage, date_start, date_end, id_visit) VALUES ( ? , ? , ? , ? , ? ) ";
-			try {
-				pstmt = connection.prepareStatement(sql);
-				pstmt.setBytes(1, this.enc(medicine_name, policies.getMReadingPolicy(), ""));
-				pstmt.setBytes(2, this.enc(dosage, policies.getMReadingPolicy(), ""));
-				pstmt.setBytes(3, this.enc(date_start, policies.getMReadingPolicy(), ""));
-				pstmt.setBytes(4, this.enc(date_end, policies.getMReadingPolicy(), ""));
-				pstmt.setInt(5, id_visit);
-				pstmt.executeUpdate();
-				pstmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+		String str = "SELECT CASE WHEN EXISTS (SELECT id FROM `patients_visits` WHERE id_patient = " + uid
+				+ " AND id = " + id_visit + ") THEN 'TRUE' ELSE 'FALSE' END";
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet res = stmt.executeQuery(str);
+			while (res.next()) {
+				str = res.getString(1);
 			}
+			res.close();
+			stmt.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		if (str == "TRUE") {
+			if (checkWritingPolicy("Medicine", uid)) {
+				PreparedStatement pstmt;
+				String sql = "INSERT INTO sdmproject.patients_medicines (medicine_name, dosage, date_start, date_end, id_visit) VALUES ( ? , ? , ? , ? , ? ) ";
+				try {
+					pstmt = connection.prepareStatement(sql);
+					pstmt.setBytes(1, this.enc(medicine_name, policies.getMReadingPolicy(), ""));
+					pstmt.setBytes(2, this.enc(dosage, policies.getMReadingPolicy(), ""));
+					pstmt.setBytes(3, this.enc(date_start, policies.getMReadingPolicy(), ""));
+					pstmt.setBytes(4, this.enc(date_end, policies.getMReadingPolicy(), ""));
+					pstmt.setInt(5, id_visit);
+					pstmt.executeUpdate();
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			System.out.println("WRONG (user id, visit id) combination");
 		}
 	}
-	
+
 	public ArrayList<ArrayList<String>> readDisplayHealthClubVisitDB(int uid) {
 		ArrayList<ArrayList<String>> results = new ArrayList<ArrayList<String>>();
 		try {
 			Statement Statement = connection.createStatement();
-			ResultSet res = Statement.executeQuery("SELECT patients_health_clubs_visits.id, patients_health_clubs_visits.id_patient_healthclub, health_clubs_patients.id_patient, health_clubs.name, patients_health_clubs_visits.date, patients_health_clubs_visits.duration, patients_health_clubs_visits.reasons, patients_health_clubs_visits.results, patients_health_clubs_visits.comments FROM patients_health_clubs_visits INNER JOIN health_clubs_patients ON patients_health_clubs_visits.id_patient_healthclub = health_clubs_patients.id AND health_clubs_patients.id_patient = "+uid+" INNER JOIN health_clubs ON health_clubs_patients.id_health_club  = health_clubs.id");
+			ResultSet res = Statement.executeQuery(
+					"SELECT patients_health_clubs_visits.id, patients_health_clubs_visits.id_patient_healthclub, health_clubs_patients.id_patient, health_clubs.name, patients_health_clubs_visits.date, patients_health_clubs_visits.duration, patients_health_clubs_visits.reasons, patients_health_clubs_visits.results, patients_health_clubs_visits.comments FROM patients_health_clubs_visits INNER JOIN health_clubs_patients ON patients_health_clubs_visits.id_patient_healthclub = health_clubs_patients.id AND health_clubs_patients.id_patient = "
+							+ uid
+							+ " INNER JOIN health_clubs ON health_clubs_patients.id_health_club  = health_clubs.id");
 			while (res.next()) {
 				ArrayList<String> subresults = new ArrayList<String>();
 				subresults.add(res.getString(1));
@@ -506,46 +546,79 @@ public class Person extends Client {
 
 	public void updateHealthClubVisitsDB(int rowid, int uid, int id_patient_healthclub, String date, String duration,
 			String reasons, String results, String comments) {
-		if (checkWritingPolicy("HealthClubVisit", uid)) {
-			PreparedStatement pstmt;
-			String sql = "UPDATE patients_health_clubs_visits SET id_patient_healthclub = ?, date = ?, duration = ?, reasons = ?, results = ?, comments = ? WHERE id = ?";
-			try {
-				pstmt = connection.prepareStatement(sql);
-				pstmt.setInt(1, id_patient_healthclub);
-				pstmt.setBytes(2, this.enc(date, policies.getHCVReadingPolicy(), ""));
-				pstmt.setBytes(3, this.enc(duration, policies.getHCVReadingPolicy(), ""));
-				pstmt.setBytes(4, this.enc(reasons, policies.getHCVReadingPolicy(), ""));
-				pstmt.setBytes(5, this.enc(results, policies.getHCVReadingPolicy(), ""));
-				pstmt.setBytes(6, this.enc(comments, policies.getHCVReadingPolicy(), ""));
-				pstmt.setInt(7, rowid);
-				pstmt.executeUpdate();
-				pstmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+		String str = "SELECT CASE WHEN EXISTS (SELECT id FROM `health_clubs_patients` WHERE id_patient = " + uid
+				+ " AND id = " + id_patient_healthclub + ") THEN 'TRUE' ELSE 'FALSE' END";
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet res = stmt.executeQuery(str);
+			while (res.next()) {
+				str = res.getString(1);
 			}
+			res.close();
+			stmt.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		if (str == "TRUE") {
+			if (checkWritingPolicy("HealthClubVisit", uid)) {
+				PreparedStatement pstmt;
+				String sql = "UPDATE patients_health_clubs_visits SET id_patient_healthclub = ?, date = ?, duration = ?, reasons = ?, results = ?, comments = ? WHERE id = ?";
+				try {
+					pstmt = connection.prepareStatement(sql);
+					pstmt.setInt(1, id_patient_healthclub);
+					pstmt.setBytes(2, this.enc(date, policies.getHCVReadingPolicy(), ""));
+					pstmt.setBytes(3, this.enc(duration, policies.getHCVReadingPolicy(), ""));
+					pstmt.setBytes(4, this.enc(reasons, policies.getHCVReadingPolicy(), ""));
+					pstmt.setBytes(5, this.enc(results, policies.getHCVReadingPolicy(), ""));
+					pstmt.setBytes(6, this.enc(comments, policies.getHCVReadingPolicy(), ""));
+					pstmt.setInt(7, rowid);
+					pstmt.executeUpdate();
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			System.out.println("WRONG (user id, visit id) combination");
 		}
 	}
 
 	public void addHealthClubVisitsDB(int uid, int id_patient_healthclub, String date, String duration, String reasons,
 			String results, String comments) {
-		if (checkWritingPolicy("HealthClubVisit", uid)) {
-			PreparedStatement pstmt;
-			String sql = "INSERT INTO sdmproject.patients_health_clubs_visits (id_patient_healthclub, date, duration, reasons, results, comments) VALUES ( ? , ? , ? , ? , ? , ? ) ";
-			try {
-				pstmt = connection.prepareStatement(sql);
-				pstmt.setInt(1, id_patient_healthclub);
-				pstmt.setBytes(2, this.enc(date, policies.getHCVReadingPolicy(), ""));
-				pstmt.setBytes(3, this.enc(duration, policies.getHCVReadingPolicy(), ""));
-				pstmt.setBytes(4, this.enc(reasons, policies.getHCVReadingPolicy(), ""));
-				pstmt.setBytes(5, this.enc(results, policies.getHCVReadingPolicy(), ""));
-				pstmt.setBytes(6, this.enc(comments, policies.getHCVReadingPolicy(), ""));
-				pstmt.executeUpdate();
-				pstmt.close();
-			} catch (SQLException e) {
-				e.printStackTrace();
+		String str = "SELECT CASE WHEN EXISTS (SELECT id FROM `health_clubs_patients` WHERE id_patient = " + uid
+				+ " AND id = " + id_patient_healthclub + ") THEN 'TRUE' ELSE 'FALSE' END";
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet res = stmt.executeQuery(str);
+			while (res.next()) {
+				str = res.getString(1);
 			}
+			res.close();
+			stmt.close();
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		if (str == "TRUE") {
+			if (checkWritingPolicy("HealthClubVisit", uid)) {
+				PreparedStatement pstmt;
+				String sql = "INSERT INTO sdmproject.patients_health_clubs_visits (id_patient_healthclub, date, duration, reasons, results, comments) VALUES ( ? , ? , ? , ? , ? , ? ) ";
+				try {
+					pstmt = connection.prepareStatement(sql);
+					pstmt.setInt(1, id_patient_healthclub);
+					pstmt.setBytes(2, this.enc(date, policies.getHCVReadingPolicy(), ""));
+					pstmt.setBytes(3, this.enc(duration, policies.getHCVReadingPolicy(), ""));
+					pstmt.setBytes(4, this.enc(reasons, policies.getHCVReadingPolicy(), ""));
+					pstmt.setBytes(5, this.enc(results, policies.getHCVReadingPolicy(), ""));
+					pstmt.setBytes(6, this.enc(comments, policies.getHCVReadingPolicy(), ""));
+					pstmt.executeUpdate();
+					pstmt.close();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+		} else {
+			System.out.println("WRONG (user id, visit id) combination");
 		}
 	}
-
 
 }
