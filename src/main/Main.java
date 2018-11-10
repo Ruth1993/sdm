@@ -1,4 +1,26 @@
-public static void main(String[] args) throws SQLException, NumberFormatException, IOException {
+package main;
+
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.sql.Connection;
+import java.sql.Statement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import sdm.Person;
+import crypto.abe.api.Server;
+import databaseAccess.DBConnection;
+import databaseAccess.KBConnection;
+
+public class Main {
+
+
+	public static void main(String[] args) throws SQLException, NumberFormatException, IOException {
 		// TODO Auto-generated method stub
 		System.out.println("SDM Project");
 		String newLine = System.getProperty("line.separator");
@@ -23,3 +45,4 @@ public static void main(String[] args) throws SQLException, NumberFormatExceptio
 
 		}
 	}
+}
