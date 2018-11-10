@@ -14,3 +14,5 @@ Before using the project, you need to install the two sql databases in the "data
 "sdmProjectDatabase.sql" should be installed in a database named sdmproject.
 "sdmkeys.sql" should be in another database named sdmkeys.
 Please change the username and password in databaseAccess.DBConnection and databaseAccess.KBConnection
+
+You can find the key for each existing user in the SecretKey file
