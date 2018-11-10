@@ -340,7 +340,8 @@ public class Person extends Client {
 							+ uid + ")");
 			while (res.next()) {
 				ArrayList<String> subresults = new ArrayList<String>();
-				for (int i = 1; i <= 4; i++) {
+				subresults.add(res.getString(1));
+				for (int i = 2; i <= 5; i++) {
 					subresults.add(this.dec(res.getBytes(i)));
 				}
 				subresults.add(res.getString(5));
@@ -406,7 +407,8 @@ public class Person extends Client {
 			while (res.next()) {
 				ArrayList<String> subresults = new ArrayList<String>();
 				subresults.add(res.getString(1));
-				for (int i = 2; i <= 5; i++) {
+				subresults.add(res.getString(2));
+				for (int i = 3; i <= 7; i++) {
 					subresults.add(this.dec(res.getBytes(i)));
 				}
 				results.add(subresults);
