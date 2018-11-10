@@ -314,6 +314,58 @@ public class Person extends Client {
 			}
 		}
 	}
+	
+	public ArrayList<ArrayList<String>> readDisplayMedicalVisitDB(int uid) {
+		ArrayList<ArrayList<String>> results = new ArrayList<ArrayList<String>>();
+		try {
+			Statement Statement = connection.createStatement();
+			ResultSet res = Statement
+					.executeQuery("SELECT patients_visits.id, patients_visits.id_patient, patients_visits.date_start, patients_visits.date_end, patients_visits.reason, patients_visits.results, patients_visits.id_hospital_doctors, hospitals_doctors.id_doctor, hospitals.name FROM patients_visits INNER JOIN hospitals_doctors ON patients_visits.id_hospital_doctors  = hospitals_doctors.id AND patients_visits.id_patient = "+uid+" INNER JOIN hospitals ON hospitals.id = hospitals_doctors.id_hospital");
+			while (res.next()) {
+				ArrayList<String> subresults = new ArrayList<String>();
+				subresults.add(res.getString(1));
+				subresults.add(res.getString(2));
+				for (int i = 3; i <= 6; i++) {
+					subresults.add(this.dec(res.getBytes(i)));
+				}
+				subresults.add(res.getString(7));
+				subresults.add(res.getString(8));
+				subresults.add(res.getString(9));
+				results.add(subresults);
+			}
+			res.close();
+			Statement.close();
+			return results;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public ArrayList<ArrayList<String>> readUpdateMedicalVisitDB(int uid) {
+		ArrayList<ArrayList<String>> results = new ArrayList<ArrayList<String>>();
+		try {
+			Statement Statement = connection.createStatement();
+			ResultSet res = Statement
+					.executeQuery("SELECT * FROM sdmproject.patients_visits WHERE id_patient = " + uid);
+			while (res.next()) {
+				ArrayList<String> subresults = new ArrayList<String>();
+				subresults.add(res.getString(1));
+				subresults.add(res.getString(2));
+				for (int i = 3; i <= 6; i++) {
+					subresults.add(this.dec(res.getBytes(i)));
+				}
+				subresults.add(res.getString(7));
+				results.add(subresults);
+			}
+			res.close();
+			Statement.close();
+			return results;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+}
 
 	public ArrayList<ArrayList<String>> readMedicalVisitDB(int uid) {
 		ArrayList<ArrayList<String>> results = new ArrayList<ArrayList<String>>();
@@ -407,6 +459,35 @@ public class Person extends Client {
 		}
 		return null;
 	}
+	
+	public ArrayList<ArrayList<String>> readDisplayMedicineDB(int uid) {
+		ArrayList<ArrayList<String>> results = new ArrayList<ArrayList<String>>();
+		try {
+			Statement Statement = connection.createStatement();
+			ResultSet res = Statement.executeQuery(
+					"SELECT patients_medicines.id, patients_medicines.medicine_name, patients_medicines.dosage, patients_medicines.date_start, patients_medicines.date_end, patients_medicines.id_visit, patients_visits.id_patient, hospitals_doctors.id_doctor, hospitals.name FROM patients_medicines INNER JOIN patients_visits ON patients_medicines.id_visit = patients_visits.id AND patients_visits.id_patient = "
+							+ uid
+							+ " INNER JOIN hospitals_doctors ON patients_visits.id_hospital_doctors  = hospitals_doctors.id INNER JOIN hospitals ON hospitals.id = hospitals_doctors.id_hospital");
+			while (res.next()) {
+				ArrayList<String> subresults = new ArrayList<String>();
+				subresults.add(res.getString(1));
+				for (int i = 2; i <= 5; i++) {
+					subresults.add(this.dec(res.getBytes(i)));
+				}
+				subresults.add(res.getString(6));
+				subresults.add(res.getString(7));
+				subresults.add(res.getString(8));
+				subresults.add(res.getString(9));
+				results.add(subresults);
+			}
+			res.close();
+			Statement.close();
+			return results;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
 
 	public void updateMedicineDB(int rowid, int uid, String medicine_name, String dosage, String date_start,
 			String date_end, int id_visit) {
@@ -473,6 +554,34 @@ public class Person extends Client {
 		}
 		return null;
 	}
+	
+	public ArrayList<ArrayList<String>> readDisplayHealthClubVisitDB(int uid) {
+		ArrayList<ArrayList<String>> results = new ArrayList<ArrayList<String>>();
+		try {
+			Statement Statement = connection.createStatement();
+			ResultSet res = Statement.executeQuery(
+					"SELECT patients_health_clubs_visits.id, patients_health_clubs_visits.id_patient_healthclub, health_clubs_patients.id_patient, health_clubs.name, patients_health_clubs_visits.date, patients_health_clubs_visits.duration, patients_health_clubs_visits.reasons, patients_health_clubs_visits.results, patients_health_clubs_visits.comments FROM patients_health_clubs_visits INNER JOIN health_clubs_patients ON patients_health_clubs_visits.id_patient_healthclub = health_clubs_patients.id AND health_clubs_patients.id_patient = "
+							+ uid
+							+ " INNER JOIN health_clubs ON health_clubs_patients.id_health_club  = health_clubs.id");
+			while (res.next()) {
+				ArrayList<String> subresults = new ArrayList<String>();
+				subresults.add(res.getString(1));
+				subresults.add(res.getString(2));
+				subresults.add(res.getString(3));
+				subresults.add(res.getString(4));
+				for (int i = 5; i <= 9; i++) {
+					subresults.add(this.dec(res.getBytes(i)));
+				}
+				results.add(subresults);
+			}
+			res.close();
+			Statement.close();
+			return results;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+}
 
 	public void updateHealthClubVisitsDB(int rowid, int uid, int id_patient_healthclub, String date, String duration,
 			String reasons, String results, String comments) {

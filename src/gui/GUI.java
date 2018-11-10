@@ -195,6 +195,9 @@ public class GUI extends JFrame implements ActionListener {
 			menu_panel.add(menu);
 	  }
 	  
+	  /**
+	   * Displays panel with textfield for inserting id to read that specific persons basic info
+	   */
 	  public void clickPersonBasicInfo() {
 		  content_panel.removeAll();
 		  
@@ -215,6 +218,10 @@ public class GUI extends JFrame implements ActionListener {
 		  repaint_panel();
 	  }
 	  
+	  /**
+	   * Displays the table with the persons specified by the id inserted
+	   * @param person_id
+	   */
 	  public void showPersonBasicInfoTable(int person_id) {
 		  content_panel.removeAll();
 		  
@@ -233,6 +240,9 @@ public class GUI extends JFrame implements ActionListener {
 		  repaint_panel();
 	  }
 	  
+	  /**
+	   * Displays panel with textfield for inserting id to read that specific persons basic health info 
+	   */
 	  public void clickPatientBasicInfo() {
 		  content_panel.removeAll();
 		  
@@ -253,6 +263,10 @@ public class GUI extends JFrame implements ActionListener {
 		  repaint_panel();
 	  }
 	  
+	  /**
+	   * 
+	   * @param person_id
+	   */
 	  public void showPatientBasicInfo(int person_id) {
 		  content_panel.removeAll();
 		  
@@ -271,6 +285,9 @@ public class GUI extends JFrame implements ActionListener {
 		  repaint_panel();
 	  }
 	  
+	  /**
+	   * Displays panel with textfield for inserting patient id to read their medical data
+	   */
 	  public void clickMedicalVisit() {
 		  content_panel.removeAll();
 		  
@@ -294,12 +311,13 @@ public class GUI extends JFrame implements ActionListener {
 	  public void showMedicalVisit(int person_id) {
 		  content_panel.removeAll();
 		  
-		  ArrayList<ArrayList<String>> results = p.readMedicalVisitDB(person_id);
+		  ArrayList<ArrayList<String>> results = p.readDisplayMedicalVisitDB(person_id);
 		  
-		  Object rowData[][] = new Object[results.size()][7];
+		  Object[] columnNames = {"Id visit", "Id patient", "Start date", "End date", "Reason", "Results", "Id hospital doctor", "ID Doctor", "Name hospital"};
+		  Object rowData[][] = new Object[results.size()][columnNames.length];
 
 		  for(int i=0; i<results.size(); i++) {
-			  Object[] row = new Object[7];
+			  Object[] row = new Object[columnNames.length];
 			  
 			  for(int j=0; j<results.get(i).size(); j++) {
 				  row[j] = results.get(i).get(j);
@@ -308,7 +326,6 @@ public class GUI extends JFrame implements ActionListener {
 			  rowData[i] = row;
 		  }
 		  
-		  Object[] columnNames = {"Id visit", "Id patient", "Start date", "End date", "Reason", "Results", "Id hospital doctor"};
 		  
 		  JTable table = new JTable(rowData, columnNames);
 		  JScrollPane scrollPane = new JScrollPane(table);
@@ -341,9 +358,9 @@ public class GUI extends JFrame implements ActionListener {
 	  public void showPatientMedicines(int person_id) {
 		  content_panel.removeAll();
 		  
-		  ArrayList<ArrayList<String>> results = p.readMedicineDB(person_id);
+		  ArrayList<ArrayList<String>> results = p.readDisplayMedicineDB(person_id);
 		  
-		  Object[] columnNames = {"Id", "Medicine name", "Dosage", "Start date", "End date", "Id visit"};
+		  Object[] columnNames = {"Id", "Medicine name", "Dosage", "Start date", "End date", "Id visit", "Id patient", "Id doctor", "Hospital name"};
 		  Object rowData[][] = new Object[results.size()][columnNames.length];
 
 		  for(int i=0; i<results.size(); i++) {
@@ -387,9 +404,9 @@ public class GUI extends JFrame implements ActionListener {
 	  public void showHealthClubVisits(int person_id) {
 		  content_panel.removeAll();
 		  
-		  ArrayList<ArrayList<String>> results = p.readHealthClubVisitDB(person_id);
+		  ArrayList<ArrayList<String>> results = p.readDisplayHealthClubVisitDB(person_id);
 		  
-		  Object[] columnNames = {"Id", "Id patient healthclub", "Date", "Duration", "Reasons", "Results", "Comments"};
+		  Object[] columnNames = {"Id", "Id patient healthclub", "Id patient", "Health club", "Date", "Duration", "Reasons", "Results", "Comments"};
 		  
 		  Object rowData[][] = new Object[results.size()][columnNames.length];
 
@@ -398,6 +415,7 @@ public class GUI extends JFrame implements ActionListener {
 			  
 			  for(int j=0; j<results.get(i).size(); j++) {
 				  row[j] = results.get(i).get(j);
+				  System.out.println(row[j]);
 			  }
 			  
 			  rowData[i] = row;
@@ -612,6 +630,7 @@ public class GUI extends JFrame implements ActionListener {
 		  t_date = new JTextField("");
 		  t_duration = new JTextField("");
 		  t_reasons = new JTextField("");
+		  t_results = new JTextField("");
 		  t_comments = new JTextField("");
 	  
 		  s_addhcvisit = new JButton("Add health club visit to system");
@@ -635,7 +654,7 @@ public class GUI extends JFrame implements ActionListener {
 		  
 		  content_panel.add(addhcvisit_panel);
 		  
-		  s_addmedicine.addActionListener(this);
+		  s_addhcvisit.addActionListener(this);
 		  
 		  repaint_panel();
 	  }
