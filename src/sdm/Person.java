@@ -502,7 +502,7 @@ public class Person extends Client {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		if (str == "TRUE") {
+		if (str.toLowerCase().equals("true")) {
 			if (checkWritingPolicy("Medicine", uid)) {
 				PreparedStatement pstmt;
 				String sql = "UPDATE patients_medicines SET medicine_name = ?, dosage = ?, date_start = ?, date_end = ?, id_visit = ? WHERE id = ?";
@@ -540,7 +540,7 @@ public class Person extends Client {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		if (str == "TRUE") {
+		if (str.toLowerCase().equals("true")) {
 			if (checkWritingPolicy("Medicine", uid)) {
 				PreparedStatement pstmt;
 				String sql = "INSERT INTO sdmproject.patients_medicines (medicine_name, dosage, date_start, date_end, id_visit) VALUES ( ? , ? , ? , ? , ? ) ";
@@ -630,7 +630,7 @@ public class Person extends Client {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		if (str == "TRUE") {
+		if (str.toLowerCase().equals("true")) {
 			if (checkWritingPolicy("HealthClubVisit", uid)) {
 				PreparedStatement pstmt;
 				String sql = "UPDATE patients_health_clubs_visits SET id_patient_healthclub = ?, date = ?, duration = ?, reasons = ?, results = ?, comments = ? WHERE id = ?";
@@ -669,7 +669,7 @@ public class Person extends Client {
 		} catch (Exception e) {
 			// TODO: handle exception
 		}
-		if (str == "TRUE") {
+		if (str.toLowerCase().equals("true")) {
 			if (checkWritingPolicy("HealthClubVisit", uid)) {
 				PreparedStatement pstmt;
 				String sql = "INSERT INTO sdmproject.patients_health_clubs_visits (id_patient_healthclub, date, duration, reasons, results, comments) VALUES ( ? , ? , ? , ? , ? , ? ) ";
