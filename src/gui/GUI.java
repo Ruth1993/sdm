@@ -23,7 +23,6 @@ public class GUI extends JFrame implements ActionListener {
 	  private Person p;
 	  
 	  //Panels
-	  private JPanel cards;
 	  private JPanel menu_panel;
 	  private JPanel content_panel;
 	  private JPanel read_pe_info_panel;
@@ -96,14 +95,15 @@ public class GUI extends JFrame implements ActionListener {
 	  private JButton s_fill_patient;
 	  
 	  //Update policy components;
-	  private JComboBox<String> c_policies;
+	  private JComboBox<String> c_r_policies;
+	  private JComboBox<String> c_w_policies;
 	  private final String[] table_names = {"BasicInfo", "BasicHealthInfo", "MedicalVisit", "Medicine", "HealthClubVisit"};
 	  private JTextField t_policy;
 	  private JButton s_update_writing_policy;
 	  private JButton s_update_reading_policy;
 	  
 	  public GUI(Connection connection, Person p) {
-		    super("PHR system interface"); 
+		    super("PHR system interface for user " + p.getId()); 
 		    
 		    this.connection = connection;
 		    
@@ -152,7 +152,7 @@ public class GUI extends JFrame implements ActionListener {
 		    this.add_visit = new JMenuItem("New visit");
 		    this.add_medicine = new JMenuItem("New medicine");
 		    this.add_healthclub_visit = new JMenuItem("New Health Club visit");
-		    this.add.add(this.add_patient);
+		    //this.add.add(this.add_patient);
 		    this.add.add(this.add_visit);
 		    this.add.add(this.add_medicine);
 		    this.add.add(this.add_healthclub_visit);
@@ -360,7 +360,7 @@ public class GUI extends JFrame implements ActionListener {
 		  
 		  ArrayList<ArrayList<String>> results = p.readDisplayMedicineDB(person_id);
 		  
-		  Object[] columnNames = {"Id", "Medicine name", "Dosage", "Start date", "End date", "Id visit", "Id patient", "Id doctor", "Hospital name"};
+		  Object[] columnNames = {"Medicine id", "Medicine name", "Dosage", "Start date", "End date", "Id visit", "Id patient", "Id doctor", "Hospital name"};
 		  Object rowData[][] = new Object[results.size()][columnNames.length];
 
 		  for(int i=0; i<results.size(); i++) {
@@ -406,7 +406,7 @@ public class GUI extends JFrame implements ActionListener {
 		  
 		  ArrayList<ArrayList<String>> results = p.readDisplayHealthClubVisitDB(person_id);
 		  
-		  Object[] columnNames = {"Id", "Id patient healthclub", "Id patient", "Health club", "Date", "Duration", "Reasons", "Results", "Comments"};
+		  Object[] columnNames = {"HC visit id", "Id patient healthclub", "Id patient", "Health club", "Date", "Duration", "Reasons", "Results", "Comments"};
 		  
 		  Object rowData[][] = new Object[results.size()][columnNames.length];
 
@@ -500,7 +500,7 @@ public class GUI extends JFrame implements ActionListener {
 		  JPanel addvisit_panel = new JPanel();
 		  addvisit_panel.setLayout(new BoxLayout(addvisit_panel, BoxLayout.Y_AXIS));
 		  
-		  JLabel l_id_patient = new JLabel("Id patient-healthclub:");
+		  JLabel l_id_patient = new JLabel("Id patient:");
 		  JLabel l_vis_date_start = new JLabel("Date start:");
 		  JLabel l_vis_date_end = new JLabel("Date end:");
 		  JLabel l_reason = new JLabel("Reason:");
@@ -617,8 +617,8 @@ public class GUI extends JFrame implements ActionListener {
 		  JPanel addhcvisit_panel = new JPanel();
 		  addhcvisit_panel.setLayout(new BoxLayout(addhcvisit_panel, BoxLayout.Y_AXIS));
 		  
-		  JLabel l_uid = new JLabel("User id:");
-		  JLabel l_id_patient = new JLabel("Patient id:");
+		  JLabel l_uid = new JLabel("Patient id:");
+		  JLabel l_id_patient = new JLabel("Health club id of patient:");
 		  JLabel l_date = new JLabel("Date:");
 		  JLabel l_duration = new JLabel("Duration:");
 		  JLabel l_reasons = new JLabel("Reasons:");
@@ -836,14 +836,14 @@ public class GUI extends JFrame implements ActionListener {
 		  update_writing_policy_panel.setLayout(new BoxLayout(update_writing_policy_panel, BoxLayout.Y_AXIS));
 		  
 		  JLabel title = new JLabel("Update policy");
-		  c_policies = new JComboBox(table_names);
+		  c_w_policies = new JComboBox(table_names);
 		  
 		  JLabel l_writing_policy = new JLabel("Change writing policy of the selected table below:");
 		  t_policy = new JTextField(200);
 		  s_update_writing_policy = new JButton("Update policy");
 		  
 		  update_writing_policy_panel.add(title);
-		  update_writing_policy_panel.add(c_policies);
+		  update_writing_policy_panel.add(c_w_policies);
 		  
 		  update_writing_policy_panel.add(l_writing_policy);
 		  update_writing_policy_panel.add(t_policy);
@@ -853,7 +853,7 @@ public class GUI extends JFrame implements ActionListener {
 
 		  content_panel.add(update_writing_policy_panel);
 		  
-		  c_policies.addActionListener(this);
+		  c_w_policies.addActionListener(this);
 		  
 		  repaint_panel();
 	  }
@@ -864,15 +864,15 @@ public class GUI extends JFrame implements ActionListener {
 		  String writingPolicy = "";
 		  
 		  if(selection.equals(table_names[0])) {
-			  writingPolicy = policies.getBIWritingPolicy();
+			  writingPolicy = policies.getBIWritingPolicyDB();
 		  } else if(selection.equals(table_names[1])) {
-			  writingPolicy = policies.getBHIWritingPolicy();
+			  writingPolicy = policies.getBHIWritingPolicyDB();
 		  } else if(selection.equals(table_names[2])) {
-			  writingPolicy = policies.getMVWritingPolicy();
+			  writingPolicy = policies.getMVWritingPolicyDB();
 		  } else if(selection.equals(table_names[3])) {
-			  writingPolicy = policies.getMWritingPolicy();
+			  writingPolicy = policies.getMWritingPolicyDB();
 		  } else if(selection.equals(table_names[4])) {
-			  writingPolicy = policies.getHCVWritingPolicy();
+			  writingPolicy = policies.getHCVWritingPolicyDB();
 		  }
 		  
 		  t_policy.setText(writingPolicy);
@@ -897,14 +897,14 @@ public class GUI extends JFrame implements ActionListener {
 		  update_reading_policy_panel.setLayout(new BoxLayout(update_reading_policy_panel, BoxLayout.Y_AXIS));
 		  
 		  JLabel title = new JLabel("Update policy");
-		  c_policies = new JComboBox(table_names);
+		  c_r_policies = new JComboBox(table_names);
 		  
 		  JLabel l_reading_policy = new JLabel("Change reading policy of the selected table below:");
 		  t_policy = new JTextField(200);
 		  s_update_reading_policy = new JButton("Update policy");
 		  
 		  update_reading_policy_panel.add(title);
-		  update_reading_policy_panel.add(c_policies);
+		  update_reading_policy_panel.add(c_r_policies);
 		  
 		  update_reading_policy_panel.add(l_reading_policy);
 		  update_reading_policy_panel.add(t_policy);
@@ -914,7 +914,7 @@ public class GUI extends JFrame implements ActionListener {
 
 		  content_panel.add(update_reading_policy_panel);
 		  
-		  c_policies.addActionListener(this);
+		  c_r_policies.addActionListener(this);
 		  
 		  repaint_panel();
 	  }
@@ -925,15 +925,15 @@ public class GUI extends JFrame implements ActionListener {
 		  String readingPolicy = "";
 		  
 		  if(selection.equals(table_names[0])) {
-			  readingPolicy = policies.getBIReadingPolicy();
+			  readingPolicy = policies.getBIReadingPolicyDB();
 		  } else if(selection.equals(table_names[1])) {
-			  readingPolicy = policies.getBHIReadingPolicy();
+			  readingPolicy = policies.getBHIReadingPolicyDB();
 		  } else if(selection.equals(table_names[2])) {
-			  readingPolicy = policies.getMVReadingPolicy();
+			  readingPolicy = policies.getMVReadingPolicyDB();
 		  } else if(selection.equals(table_names[3])) {
-			  readingPolicy = policies.getMReadingPolicy();
+			  readingPolicy = policies.getMReadingPolicyDB();
 		  } else if(selection.equals(table_names[4])) {
-			  readingPolicy = policies.getHCVReadingPolicy();
+			  readingPolicy = policies.getHCVReadingPolicyDB();
 		  }
 		  
 		  t_policy.setText(readingPolicy);
@@ -1026,16 +1026,16 @@ public class GUI extends JFrame implements ActionListener {
 			}
 	    } else if(source == this.update_writing_policy) {
 	    	clickUpdateWritingPolicy();
-	    } else if(source == this.c_policies) {
-	    	fillFieldUpdateWritingPolicy((String) c_policies.getSelectedItem());
+	    } else if(source == this.c_w_policies) {
+	    	fillFieldUpdateWritingPolicy((String) c_w_policies.getSelectedItem());
 	    } else if(source == this.s_update_writing_policy) {
-	    	updateWritingPolicy((String) c_policies.getSelectedItem());
+	    	updateWritingPolicy((String) c_w_policies.getSelectedItem());
 	    } else if(source == this.update_reading_policy) {
 	    	clickUpdateReadingPolicy();
-	    } else if(source == this.c_policies) {
-	    	fillFieldUpdateReadingPolicy((String) c_policies.getSelectedItem());
+	    } else if(source == this.c_r_policies) {
+	    	fillFieldUpdateReadingPolicy((String) c_r_policies.getSelectedItem());
 	    } else if(source == this.s_update_reading_policy) {
-	    	updateReadingPolicy((String) c_policies.getSelectedItem());
+	    	updateReadingPolicy((String) c_r_policies.getSelectedItem());
 	    }
 	  }
 }
