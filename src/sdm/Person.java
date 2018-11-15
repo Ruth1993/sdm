@@ -229,18 +229,24 @@ public class Person extends Client {
 	public void updateBasicInfoDB(int uid, String name, String birth_date, String birth_place, String gender,
 			String nationality, String address, String phone_no) throws SQLException {
 		// Connection connection = DBConnection.getConnection();
+		Policies p;
+		if (this.id != uid) {
+			p = new Policies(uid);
+		} else {
+			p = this.policies;
+		}
 		if (checkWritingPolicy("BasicInfo", uid)) {
 			PreparedStatement pstmt;
 			String sql = "UPDATE sdmproject.persons_basic_info SET name = ? , birth_date = ? , birth_place = ?, gender = ? , nationality = ? , address = ? , phone_number = ? WHERE id = ?";
 			try {
 				pstmt = connection.prepareStatement(sql);
-				pstmt.setBytes(1, this.enc(name, policies.getBIReadingPolicy(), ""));
-				pstmt.setBytes(2, this.enc(birth_date, policies.getBIReadingPolicy(), ""));
-				pstmt.setBytes(3, this.enc(birth_place, policies.getBIReadingPolicy(), ""));
-				pstmt.setBytes(4, this.enc(gender, policies.getBIReadingPolicy(), ""));
-				pstmt.setBytes(5, this.enc(nationality, policies.getBIReadingPolicy(), ""));
-				pstmt.setBytes(6, this.enc(address, policies.getBIReadingPolicy(), ""));
-				pstmt.setBytes(7, this.enc(phone_no, policies.getBIReadingPolicy(), ""));
+				pstmt.setBytes(1, this.enc(name, p.getBIReadingPolicy(), ""));
+				pstmt.setBytes(2, this.enc(birth_date, p.getBIReadingPolicy(), ""));
+				pstmt.setBytes(3, this.enc(birth_place, p.getBIReadingPolicy(), ""));
+				pstmt.setBytes(4, this.enc(gender, p.getBIReadingPolicy(), ""));
+				pstmt.setBytes(5, this.enc(nationality, p.getBIReadingPolicy(), ""));
+				pstmt.setBytes(6, this.enc(address, p.getBIReadingPolicy(), ""));
+				pstmt.setBytes(7, this.enc(phone_no, p.getBIReadingPolicy(), ""));
 				pstmt.setInt(8, uid);
 				pstmt.executeUpdate();
 				pstmt.close();
@@ -294,15 +300,21 @@ public class Person extends Client {
 
 	public void updateBasicHealthInfoDB(int uid, String blood_type, String weight, String height,
 			String emergency_contact, int id_family_doctor) throws SQLException {
+		Policies p;
+		if (this.id != uid) {
+			p = new Policies(uid);
+		} else {
+			p = this.policies;
+		}
 		if (checkWritingPolicy("BasicHealthInfo", uid)) {
 			PreparedStatement pstmt;
 			String sql = "UPDATE sdmproject.patients_basic_health_info SET blood_type = ? , weight = ? , height = ? , emergency_contact = ? , id_family_doctor = ? WHERE id_patient = ? ";
 			try {
 				pstmt = connection.prepareStatement(sql);
-				pstmt.setBytes(1, this.enc(blood_type, policies.getBHIReadingPolicy(), ""));
-				pstmt.setBytes(2, this.enc(weight, policies.getBHIReadingPolicy(), ""));
-				pstmt.setBytes(3, this.enc(height, policies.getBHIReadingPolicy(), ""));
-				pstmt.setBytes(4, this.enc(emergency_contact, policies.getBHIReadingPolicy(), ""));
+				pstmt.setBytes(1, this.enc(blood_type, p.getBHIReadingPolicy(), ""));
+				pstmt.setBytes(2, this.enc(weight, p.getBHIReadingPolicy(), ""));
+				pstmt.setBytes(3, this.enc(height, p.getBHIReadingPolicy(), ""));
+				pstmt.setBytes(4, this.enc(emergency_contact, p.getBHIReadingPolicy(), ""));
 				pstmt.setInt(5, id_family_doctor);
 				pstmt.setInt(6, uid);
 				pstmt.executeUpdate();
@@ -392,16 +404,22 @@ public class Person extends Client {
 
 	public void updateMedicalVisitDB(int visitid, int uid, String date_start, String date_end, String reason,
 			String results, int id_hospital_doctors) {
+		Policies p;
+		if (this.id != uid) {
+			p = new Policies(uid);
+		} else {
+			p = this.policies;
+		}
 		if (checkWritingPolicy("MedicalVisit", uid)) {
 			PreparedStatement pstmt;
 			String sql = "UPDATE sdmproject.patients_visits SET id_patient = ?, date_start = ?, date_end = ?, reason = ?, results = ?, id_hospital_doctors = ? WHERE id = ?";
 			try {
 				pstmt = connection.prepareStatement(sql);
 				pstmt.setInt(1, uid);
-				pstmt.setBytes(2, this.enc(date_start, policies.getMVReadingPolicy(), ""));
-				pstmt.setBytes(3, this.enc(date_end, policies.getMVReadingPolicy(), ""));
-				pstmt.setBytes(4, this.enc(reason, policies.getMVReadingPolicy(), ""));
-				pstmt.setBytes(5, this.enc(results, policies.getMVReadingPolicy(), ""));
+				pstmt.setBytes(2, this.enc(date_start, p.getMVReadingPolicy(), ""));
+				pstmt.setBytes(3, this.enc(date_end, p.getMVReadingPolicy(), ""));
+				pstmt.setBytes(4, this.enc(reason, p.getMVReadingPolicy(), ""));
+				pstmt.setBytes(5, this.enc(results, p.getMVReadingPolicy(), ""));
 				pstmt.setInt(6, id_hospital_doctors);
 				pstmt.setInt(7, visitid);
 				pstmt.executeUpdate();
@@ -414,16 +432,22 @@ public class Person extends Client {
 
 	public void addMedicalVisitDB(int uid, String date_start, String date_end, String reason, String results,
 			int id_hospital_doctors) {
+		Policies p;
+		if (this.id != uid) {
+			p = new Policies(uid);
+		} else {
+			p = this.policies;
+		}
 		if (checkWritingPolicy("MedicalVisit", uid)) {
 			PreparedStatement pstmt;
 			String sql = "INSERT INTO sdmproject.patients_visits (id_patient, date_start, date_end, reason, results, id_hospital_doctors) VALUES ( ? , ? , ? , ? , ? , ? ) ";
 			try {
 				pstmt = connection.prepareStatement(sql);
 				pstmt.setInt(1, uid);
-				pstmt.setBytes(2, this.enc(date_start, policies.getMVReadingPolicy(), ""));
-				pstmt.setBytes(3, this.enc(date_end, policies.getMVReadingPolicy(), ""));
-				pstmt.setBytes(4, this.enc(reason, policies.getMVReadingPolicy(), ""));
-				pstmt.setBytes(5, this.enc(results, policies.getMVReadingPolicy(), ""));
+				pstmt.setBytes(2, this.enc(date_start, p.getMVReadingPolicy(), ""));
+				pstmt.setBytes(3, this.enc(date_end, p.getMVReadingPolicy(), ""));
+				pstmt.setBytes(4, this.enc(reason, p.getMVReadingPolicy(), ""));
+				pstmt.setBytes(5, this.enc(results, p.getMVReadingPolicy(), ""));
 				pstmt.setInt(6, id_hospital_doctors);
 				pstmt.executeUpdate();
 				pstmt.close();
@@ -489,11 +513,18 @@ public class Person extends Client {
 
 	public void updateMedicineDB(int rowid, int uid, String medicine_name, String dosage, String date_start,
 			String date_end, int id_visit) {
-		String str = "SELECT CASE WHEN EXISTS (SELECT id FROM `patients_visits` WHERE id_patient = " + uid
+		Policies p;
+		if (this.id != uid) {
+			p = new Policies(uid);
+		} else {
+			p = this.policies;
+		}
+		String str = "SELECT CASE WHEN EXISTS (SELECT id FROM patients_visits WHERE id_patient = " + uid
 				+ " AND id = " + id_visit + ") THEN 'TRUE' ELSE 'FALSE' END";
 		try {
 			Statement stmt = connection.createStatement();
 			ResultSet res = stmt.executeQuery(str);
+			
 			while (res.next()) {
 				str = res.getString(1);
 			}
@@ -508,10 +539,10 @@ public class Person extends Client {
 				String sql = "UPDATE patients_medicines SET medicine_name = ?, dosage = ?, date_start = ?, date_end = ?, id_visit = ? WHERE id = ?";
 				try {
 					pstmt = connection.prepareStatement(sql);
-					pstmt.setBytes(1, this.enc(medicine_name, policies.getMReadingPolicy(),""));
-					pstmt.setBytes(2, this.enc(dosage, policies.getMReadingPolicy(),""));
-					pstmt.setBytes(3, this.enc(date_start, policies.getMReadingPolicy(),""));
-					pstmt.setBytes(4, this.enc(date_end, policies.getMReadingPolicy(),""));
+					pstmt.setBytes(1, this.enc(medicine_name, p.getMReadingPolicy(),""));
+					pstmt.setBytes(2, this.enc(dosage, p.getMReadingPolicy(),""));
+					pstmt.setBytes(3, this.enc(date_start, p.getMReadingPolicy(),""));
+					pstmt.setBytes(4, this.enc(date_end, p.getMReadingPolicy(),""));
 					pstmt.setInt(5, id_visit);
 					pstmt.setInt(6, rowid);
 					pstmt.executeUpdate();
@@ -527,7 +558,13 @@ public class Person extends Client {
 
 	public void addMedicineDB(int uid, String medicine_name, String dosage, String date_start, String date_end,
 			int id_visit) {
-		String str = "SELECT CASE WHEN EXISTS (SELECT id FROM `patients_visits` WHERE id_patient = " + uid
+		Policies p;
+		if (this.id != uid) {
+			p = new Policies(uid);
+		} else {
+			p = this.policies;
+		}
+		String str = "SELECT CASE WHEN EXISTS (SELECT id FROM patients_visits WHERE id_patient = " + uid
 				+ " AND id = " + id_visit + ") THEN 'TRUE' ELSE 'FALSE' END";
 		try {
 			Statement stmt = connection.createStatement();
@@ -546,10 +583,10 @@ public class Person extends Client {
 				String sql = "INSERT INTO sdmproject.patients_medicines (medicine_name, dosage, date_start, date_end, id_visit) VALUES ( ? , ? , ? , ? , ? ) ";
 				try {
 					pstmt = connection.prepareStatement(sql);
-					pstmt.setBytes(1, this.enc(medicine_name, policies.getMReadingPolicy(),""));
-					pstmt.setBytes(2, this.enc(dosage, policies.getMReadingPolicy(),""));
-					pstmt.setBytes(3, this.enc(date_start, policies.getMReadingPolicy(),""));
-					pstmt.setBytes(4, this.enc(date_end, policies.getMReadingPolicy(),""));
+					pstmt.setBytes(1, this.enc(medicine_name, p.getMReadingPolicy(),""));
+					pstmt.setBytes(2, this.enc(dosage, p.getMReadingPolicy(),""));
+					pstmt.setBytes(3, this.enc(date_start, p.getMReadingPolicy(),""));
+					pstmt.setBytes(4, this.enc(date_end, p.getMReadingPolicy(),""));
 					pstmt.setInt(5, id_visit);
 					pstmt.executeUpdate();
 					pstmt.close();
@@ -617,7 +654,13 @@ public class Person extends Client {
 
 	public void updateHealthClubVisitsDB(int rowid, int uid, int id_patient_healthclub, String date, String duration,
 			String reasons, String results, String comments) {
-		String str = "SELECT CASE WHEN EXISTS (SELECT id FROM `health_clubs_patients` WHERE id_patient = " + uid
+		Policies p;
+		if (this.id != uid) {
+			p = new Policies(uid);
+		} else {
+			p = this.policies;
+		}
+		String str = "SELECT CASE WHEN EXISTS (SELECT id FROM health_clubs_patients WHERE id_patient = " + uid
 				+ " AND id = " + id_patient_healthclub + ") THEN 'TRUE' ELSE 'FALSE' END";
 		try {
 			Statement stmt = connection.createStatement();
@@ -637,11 +680,11 @@ public class Person extends Client {
 				try {
 					pstmt = connection.prepareStatement(sql);
 					pstmt.setInt(1, id_patient_healthclub);
-					pstmt.setBytes(2, this.enc(date, policies.getHCVReadingPolicy(),""));
-					pstmt.setBytes(3, this.enc(duration, policies.getHCVReadingPolicy(),""));
-					pstmt.setBytes(4, this.enc(reasons, policies.getHCVReadingPolicy(),""));
-					pstmt.setBytes(5, this.enc(results, policies.getHCVReadingPolicy(),""));
-					pstmt.setBytes(6, this.enc(comments, policies.getHCVReadingPolicy(),""));
+					pstmt.setBytes(2, this.enc(date, p.getHCVReadingPolicy(),""));
+					pstmt.setBytes(3, this.enc(duration, p.getHCVReadingPolicy(),""));
+					pstmt.setBytes(4, this.enc(reasons, p.getHCVReadingPolicy(),""));
+					pstmt.setBytes(5, this.enc(results, p.getHCVReadingPolicy(),""));
+					pstmt.setBytes(6, this.enc(comments, p.getHCVReadingPolicy(),""));
 					pstmt.setInt(7, rowid);
 					pstmt.executeUpdate();
 					pstmt.close();
@@ -656,7 +699,13 @@ public class Person extends Client {
 
 	public void addHealthClubVisitsDB(int uid, int id_patient_healthclub, String date, String duration, String reasons,
 			String results, String comments) {
-		String str = "SELECT CASE WHEN EXISTS (SELECT id FROM `health_clubs_patients` WHERE id_patient = " + uid
+		Policies p;
+		if (this.id != uid) {
+			p = new Policies(uid);
+		} else {
+			p = this.policies;
+		}
+		String str = "SELECT CASE WHEN EXISTS (SELECT id FROM health_clubs_patients WHERE id_patient = " + uid
 				+ " AND id = " + id_patient_healthclub + ") THEN 'TRUE' ELSE 'FALSE' END";
 		try {
 			Statement stmt = connection.createStatement();
@@ -676,11 +725,11 @@ public class Person extends Client {
 				try {
 					pstmt = connection.prepareStatement(sql);
 					pstmt.setInt(1, id_patient_healthclub);
-					pstmt.setBytes(2, this.enc(date, policies.getHCVReadingPolicy(),""));
-					pstmt.setBytes(3, this.enc(duration, policies.getHCVReadingPolicy(),""));
-					pstmt.setBytes(4, this.enc(reasons, policies.getHCVReadingPolicy(),""));
-					pstmt.setBytes(5, this.enc(results, policies.getHCVReadingPolicy(),""));
-					pstmt.setBytes(6, this.enc(comments, policies.getHCVReadingPolicy(),""));
+					pstmt.setBytes(2, this.enc(date, p.getHCVReadingPolicy(),""));
+					pstmt.setBytes(3, this.enc(duration, p.getHCVReadingPolicy(),""));
+					pstmt.setBytes(4, this.enc(reasons, p.getHCVReadingPolicy(),""));
+					pstmt.setBytes(5, this.enc(results, p.getHCVReadingPolicy(),""));
+					pstmt.setBytes(6, this.enc(comments, p.getHCVReadingPolicy(),""));
 					pstmt.executeUpdate();
 					pstmt.close();
 				} catch (SQLException e) {
